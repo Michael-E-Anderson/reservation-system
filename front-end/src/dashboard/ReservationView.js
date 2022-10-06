@@ -4,16 +4,15 @@ import { useEffect } from "react";
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://git.heroku.com/reservation-system-thinkful.git"
-    : "http://localhost:3001/reservations";
+    : "http://localhost:3001/reservations?date=xxxx-xx-xx";
 
 function ReservationView({ reservation }) {
     async function getReservation(reservation, signal) {
       const response = fetch(BASE_URL, {
         method: "GET",
-        body: JSON.stringify(reservation),
       });
 
-      return response.json();
+      return response;
     }
 
     useEffect(() => {

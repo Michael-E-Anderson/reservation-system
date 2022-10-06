@@ -34,14 +34,14 @@ function Dashboard({ date }) {
       <div className="d-flex">
         <button
           type="button"
-          onClick={() => previous}
+          onClick={previous}
           className="btn btn-secondary mr-auto p-2"
         >
           Yesterday
         </button>
         <button
           type="button"
-          onClick={() => next}
+          onClick={next}
           className="btn btn-secondary p-2"
         >
           Tomorrow
