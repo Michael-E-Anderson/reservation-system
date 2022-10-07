@@ -21,7 +21,6 @@ function ReservationView({ reservation }) {
         async function loadReservation() {
             await getReservation(reservation, abortController.signal)
         }
-
         loadReservation()
     }, [reservation])
 

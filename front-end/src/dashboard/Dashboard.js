@@ -101,11 +101,18 @@
 
 
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router";
 import { listReservations } from "../utils/api";
 import { previous, next, today } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "./ReservationList";
 import DateButtons from "./DateButtons";
+
+function useQuery() {
+  const { search } = useLocation();
+  console.log(search, window.location)
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
 
 /**
  * Defines the dashboard page.
@@ -116,24 +123,16 @@ import DateButtons from "./DateButtons";
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-
-
-  useEffect(loadDashboard, [date]);
-
-  // const nextDate = async (event) => {
-  //   event.preventDefault()
-  //   const date = new Date()
-  //   const day = date.getDate();
-  //   const month = date.getMonth() + 1;
-  //   const year = date.getFullYear();
-  //   console.log(`${year}-${month}-${day}`)
-    // setResDate(next(`${year}-${month}-${day}`));
- // }
+  const params = useQuery()
+  const filteredDate = params.get("date") || date
+  console.log(filteredDate, params.get("date"))
+  useEffect(loadDashboard, [filteredDate]);
 
   function loadDashboard() {
+    console.log("111")
     const abortController = new AbortController();
     setReservationsError(null);
-    listReservations({ date }, abortController.signal)
+    listReservations({ date: filteredDate }, abortController.signal)
       .then(setReservations)
       .catch(setReservationsError);
     return () => abortController.abort();
@@ -142,26 +141,14 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-flex justify-content-between pt-2">
         <DateButtons
-            previous={`/reservations?date=${previous(date)}`}
-            today={`/reservations?date=${today()}`}
-            next={`/reservations?date=${next(date)}`}
-          />
-        <button type="button" onClick={() => previous(date)} className="btn btn-secondary">
-          Previous Day
-        </button>
-        <button type="button" onClick={today} className="btn btn-primary">
-          Today
-        </button>
-        <button type="button" onClick={() => next()} className="btn btn-secondary">
-          Next Day
-        </button>
-      </div>
+            previous={`/dashboard?date=${previous(filteredDate)}`}
+            today={`/dashboard?date=${today()}`}
+            next={`/dashboard?date=${next(filteredDate)}`}
+          />       
       <div className="d-md-flex mb-3 pt-3">
-        <h4 className="mb-0">Reservations for {date}</h4>
+        <h4 className="mb-0">Reservations for {filteredDate}</h4>
       </div>
-
       <ErrorAlert error={reservationsError} />
       <ReservationList reservations={reservations} />
     </main>

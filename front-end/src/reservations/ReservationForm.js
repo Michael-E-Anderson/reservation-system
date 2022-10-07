@@ -7,7 +7,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
     let min = today()
 
     function closed(date) {
-        const day = date.toLocaleDateString('en-US', {weekday: 'long'})
+        const day = date.toLocaleDateString({weekday: 'long'})
         const error = "The restaurant will be closed this day."
         if (day === "Tuesday") {
             throw error
@@ -27,6 +27,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 onChange={handleChange}
                 value={reservation.firstName}
                 placeholder="First Name"
+                required
               />
             </div>
             <div className="pt-1">
@@ -37,6 +38,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 onChange={handleChange}
                 value={reservation.lastName}
                 placeholder="Last Name"
+                required
               />
             </div>
             <div className="pt-1">
@@ -47,6 +49,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 onChange={handleChange}
                 value={reservation.mobileNumber}
                 placeholder="Mobile Number"
+                required
               />
             </div>
             <div className="pt-1">
@@ -58,6 +61,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 onChange={handleChange}
                 value={reservation.reservationDate}
                 placeholder="Date of Reservation"
+                required
               />
             </div>
             <div className="pt-1">
@@ -68,6 +72,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 onChange={handleChange}
                 value={reservation.reservationTime}
                 placeholder="Time of Reservation"
+                required
               />
             </div>
             <div className="pt-1">
@@ -79,6 +84,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 onChange={handleChange}
                 value={reservation.people}
                 placeholder="Number of Guests"
+                required
               />
             </div>
           </div>

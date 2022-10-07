@@ -10,6 +10,6 @@ const controller = require("./reservations.controller");
 
 router.route("/").get(controller.list);
 
-router.route("/new").post(controller.create)
+router.route("/").post(controller.create)
 
 module.exports = router;

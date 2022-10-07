@@ -6,7 +6,7 @@ import ReservationForm from "./ReservationForm";
 
 const BASE_URL =
   process.env.NODE_ENV === "production"
-    ? "https://git.heroku.com/reservation-system-thinkful.git" : "http://localhost:3001/reservations/new";
+    ? "https://git.heroku.com/reservation-system-thinkful.git" : "http://localhost:3001/reservations";
 
 
       function AddReservation() {
@@ -80,14 +80,45 @@ const BASE_URL =
           return await response;
         }
 
+        function closed(formData) {
+             const resDate = formData.reservation_date;
+             const resTime = formData.reservation_time;
+             const resHour = parseInt(resTime.substring(0, 3))
+             const resMinutes = parseInt(resTime.substring(3, 6))
+             const year = parseInt(resDate.substring(0, 4))
+             const month = parseInt(resDate.substring(5, 7))
+             const day = parseInt(resDate.substring(8, 10))
+             const date = new Date(Date.UTC(year, month, day)).toString()
+             const resDay = date.substring(0, 3);
+             const now = new Date()
+             const nowHour = now.getHours()
+             const nowMinutes = now.getMinutes()
+             const nowDay = now.getDay() + 2
+             const nowMonth = now.getMonth() + 1
+
+             if (resDay === "Tue") {
+                 return true
+             } else if (nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
+                 return true
+             } else if (resTime < "10:30" || resTime > "21:30" ) {
+                 return true
+             } else {
+                 return false
+             }
+        }
+
         const handleSubmit = async (event) => {
           event.preventDefault();
-          const response = await createReservation(formData);
-          if (response.ok) {
+          const response = await createReservation(formData);        
+          if (response.ok && !closed(formData)) {
           history.push(`/reservations?date=${formData.reservation_date}`);
           setFormData(initialFormState)
+        } else if (closed(formData)) {
+          setError(
+            `You cannot make a reservation on ${formData.reservation_date} at ${formData.reservation_time}.  Please select another date and/or time.`
+          );
         } else {
-            setError("Guests must be at least one.")
+          setError("There must be at least 1 guest on the reservation.");
         };
         };
 
@@ -125,7 +156,9 @@ const BASE_URL =
                 handleSubmit={handleSubmit}
                 reservation={formData}
               />
-              <p>{error}</p>
+              <div className="alert pt-2">
+                <p className="alert-danger">{error}</p>
+              </div>
             </div>
           </>
         );
