@@ -10,6 +10,6 @@ const controller = require("./reservations.controller");
 
 router.route("/").get(controller.list);
 
-router.route("/new").put(controller.create).all(methodNotAllowed)
+router.route("/new").post(controller.create)
 
 module.exports = router;

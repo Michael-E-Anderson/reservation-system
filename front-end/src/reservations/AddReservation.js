@@ -1,7 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
+import { useHistory } from "react-router";
 import ReservationForm from "./ReservationForm";
+
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://git.heroku.com/reservation-system-thinkful.git" : "http://localhost:3001/reservations/new";
@@ -9,6 +11,8 @@ const BASE_URL =
 
       function AddReservation() {
         const mountedRef = useRef(false);
+        const history = useHistory()
+        const [error, setError] = useState("")
         // const { reservationId } = useParams();
         // const [reservation, setReservation] = useState([]);
 
@@ -55,27 +59,36 @@ const BASE_URL =
         };
 
         const [formData, setFormData] = useState([]);
-
         const changeHandler = ({ target }) => {
-          setFormData((currentFormData) => ({
-            ...currentFormData,
+            console.log("change")
+          setFormData( {
+            ...formData,
             [target.name]: target.value,
-          }));
+          });
         };
 
         async function createReservation(data) {
-          const response = fetch(BASE_URL, {
+            mountedRef.current = true
+          const response = await fetch(`${BASE_URL}?first_name=${data.first_name}&last_name=${data.last_name}&mobile_number=${data.mobile_number}&reservation_date=${data.reservation_date}&reservation_time=${data.reservation_time}&people=${data.people}`, {
             method: "POST",
+            headers: {contentType: "application/json"},
             body: JSON.stringify(data),
-          });
+          }).catch(error => {console.error(error)
+        return Promise.reject(error)});
 
-          return await response.json();
+
+          return await response;
         }
 
         const handleSubmit = async (event) => {
           event.preventDefault();
-          await createReservation(formData);
-          setFormData(initialFormState);
+          const response = await createReservation(formData);
+          if (response.ok) {
+          history.push(`/reservations?date=${formData.reservation_date}`);
+          setFormData(initialFormState)
+        } else {
+            setError("Guests must be at least one.")
+        };
         };
 
         return (
@@ -112,6 +125,7 @@ const BASE_URL =
                 handleSubmit={handleSubmit}
                 reservation={formData}
               />
+              <p>{error}</p>
             </div>
           </>
         );

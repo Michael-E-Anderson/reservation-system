@@ -1,8 +1,18 @@
 import React from "react";
 import { useHistory } from "react-router-dom"
+import { today } from "../utils/date-time";
 
-function ReservationForm({ handleSubmit, changeHandler, reservation }) {
+function ReservationForm({ handleSubmit, handleChange, reservation }) {
     const history = useHistory();
+    let min = today()
+
+    function closed(date) {
+        const day = date.toLocaleDateString('en-US', {weekday: 'long'})
+        const error = "The restaurant will be closed this day."
+        if (day === "Tuesday") {
+            throw error
+        }
+    }
 
     return (
       <>
@@ -14,77 +24,78 @@ function ReservationForm({ handleSubmit, changeHandler, reservation }) {
                 id="first_name"
                 type="text"
                 name="first_name"
-                onChange={changeHandler}
+                onChange={handleChange}
                 value={reservation.firstName}
                 placeholder="First Name"
               />
             </div>
-            <div>
+            <div className="pt-1">
               <input
                 id="last_name"
                 type="text"
                 name="last_name"
-                onChange={changeHandler}
+                onChange={handleChange}
                 value={reservation.lastName}
                 placeholder="Last Name"
               />
             </div>
-            <div>
-                <input
-                    id="mobile_number"
-                    type="text"
-                    name="mobile_number"
-                    onChange={changeHandler}
-                    value={reservation.mobileNumber}
-                    placeholder="Mobile Number"
-                />
+            <div className="pt-1">
+              <input
+                id="mobile_number"
+                type="text"
+                name="mobile_number"
+                onChange={handleChange}
+                value={reservation.mobileNumber}
+                placeholder="Mobile Number"
+              />
             </div>
-            <div>
-                <input
-                    id="reservation_date"
-                    type="date"
-                    name="reservation_date"
-                    onChange={changeHandler}
-                    value={reservation.reservationDate}
-                    placeholder="Date of Reservation"
-                />
+            <div className="pt-1">
+              <input
+                id="reservation_date"
+                type="date"
+                min={min}
+                name="reservation_date"
+                onChange={handleChange}
+                value={reservation.reservationDate}
+                placeholder="Date of Reservation"
+              />
             </div>
-            <div>
-                <input
-                    id="reservation_time"
-                    type="time"
-                    name="reservation_time"
-                    onChange={changeHandler}
-                    value={reservation.reservationTime}
-                    placeholder="Time of Reservation"
-                />
+            <div className="pt-1">
+              <input
+                id="reservation_time"
+                type="time"
+                name="reservation_time"
+                onChange={handleChange}
+                value={reservation.reservationTime}
+                placeholder="Time of Reservation"
+              />
             </div>
-            <div>
-                <input
-                    id="people"
-                    type="number"
-                    min={1}
-                    name="people"
-                    onChange={changeHandler}
-                    value={reservation.people}
-                    placeholder="Number of Guests"
-                />
+            <div className="pt-1">
+              <input
+                id="people"
+                type="number"
+                min={1}
+                name="people"
+                onChange={handleChange}
+                value={reservation.people}
+                placeholder="Number of Guests"
+              />
             </div>
           </div>
-          <div>
+          <div className="pt-1">
             <button
-                type="submit"
-                className="btn btn-primary"
-                onClick={() => history.push(`/reservations?date=${reservation.date}`)}
+              type="submit"
+              className="btn btn-primary mr-3"
+              onClick={handleSubmit}
             >
-                Submit
+              Submit
             </button>
             <button
-                type="button"
-                className="btn btn-danger"
-                onClick={() => history.goBack()}
+              type="button"
+              className="btn btn-danger"
+              onClick={() => history.goBack()}
             >
-                Cancel
+              Cancel
             </button>
           </div>
         </form>

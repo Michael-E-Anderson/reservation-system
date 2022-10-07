@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { listReservations } from "../utils/api";
-import { previous, next } from "../utils/date-time";
+import { previous, next, today } from "../utils/date-time";
 import ErrorAlert from "../layout/ErrorAlert";
 import ReservationList from "./ReservationList";
 
@@ -13,8 +13,19 @@ import ReservationList from "./ReservationList";
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
+  const [resDate, setResDate] = useState("")
 
-  useEffect(loadDashboard, [date]);
+  useEffect(loadDashboard, [resDate]);
+
+  const nextDate = async (event) => {
+    event.preventDefault()
+    const date = new Date()
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    console.log(`${year}-${month}-${day}`)
+    setResDate(next(`${year}-${month}-${day}`));
+  }
 
   function loadDashboard() {
     const abortController = new AbortController();
@@ -28,29 +39,23 @@ function Dashboard({ date }) {
   return (
     <main>
       <h1>Dashboard</h1>
-      <div className="d-md-flex mb-3">
-        <h4 className="mb-0">Reservations for {date}</h4>
+      <div className="d-flex justify-content-between pt-2">
+        <button type="button" onClick={() => previous(date)} className="btn btn-secondary">
+          Previous Day
+        </button>
+        <button type="button" onClick={today} className="btn btn-primary">
+          Today
+        </button>
+        <button type="button" onClick={() => nextDate} className="btn btn-secondary">
+          Next Day
+        </button>
       </div>
-      <div className="d-flex">
-        <button
-          type="button"
-          onClick={previous}
-          className="btn btn-secondary mr-auto p-2"
-        >
-          Yesterday
-        </button>
-        <button
-          type="button"
-          onClick={next}
-          className="btn btn-secondary p-2"
-        >
-          Tomorrow
-        </button>
+      <div className="d-md-flex mb-3 pt-3">
+        <h4 className="mb-0">Reservations for {resDate}</h4>
       </div>
 
       <ErrorAlert error={reservationsError} />
-      <ReservationList reservations={reservations}
-      />
+      <ReservationList reservations={reservations} />
     </main>
   );
 }

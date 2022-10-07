@@ -11,7 +11,8 @@ async function list(req, res) {
 
 function bodyHasData(propertyName) {
   return function(req, res, next) {
-    const { data = {} } = req.body;
+    const data = {...req.body, ...req.query};
+
     if (data[propertyName]) {
       return next()
     } next({
@@ -22,7 +23,7 @@ function bodyHasData(propertyName) {
 }
 
 function peopleQuantity(req, res, next) {
-  const people = req.body.data.people
+  const people = req.query.people
   if (people > 0) {
     return next()
   } next({
@@ -32,7 +33,7 @@ function peopleQuantity(req, res, next) {
 }
 
 async function create(req, res) {
-  const data = await service.create(req.body.data)
+  const data = await service.create(req.query)
   res.status(201).json({ data })
 }
 
