@@ -15,7 +15,7 @@ function TablesForm({ handleChange, handleSubmit, tables }) {
                 type="text"
                 name="table_name"
                 onChange={handleChange}
-                value={tables.firstName}
+                value={tables.table_name}
                 placeholder="Table Name"
                 required
               />

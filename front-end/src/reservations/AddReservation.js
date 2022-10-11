@@ -52,14 +52,14 @@ import ReservationForm from "./ReservationForm";
           mobile_number: "",
           reservation_date: "",
           reservation_time: "",
-          people: "",
+          people: 0,
         };
 
         const [formData, setFormData] = useState([]);
         const changeHandler = ({ target }) => {
           setFormData( {
             ...formData,
-            [target.name]: target.value,
+            [target.name]: target.name === "people" ? parseInt(target.value) : target.value,
           });
         };
 
@@ -67,11 +67,13 @@ import ReservationForm from "./ReservationForm";
 
         const handleSubmit = async (event) => {
           event.preventDefault();
-          const response = await createReservation(formData);        
-          history.push(`/reservations?date=${formData.reservation_date}`);
-          setFormData(initialFormState)
-
-          return response
+          createReservation(formData).then(() => {
+            history.push(`/reservations?date=${formData.reservation_date}`);
+            setFormData(initialFormState);
+          }).catch(err => {
+            setError(err.message)
+          });        
+          
         };
 
         return (
@@ -108,9 +110,9 @@ import ReservationForm from "./ReservationForm";
                 handleSubmit={handleSubmit}
                 reservation={formData}
               />
-              <div className="alert pt-2">
+              {error && <div className="alert pt-2">
                 <p className="alert-danger">{error}</p>
-              </div>
+              </div>}
             </div>
           </>
         );

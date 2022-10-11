@@ -110,7 +110,6 @@ import DateButtons from "./DateButtons";
 
 function useQuery() {
   const { search } = useLocation();
-  console.log(search, window.location)
   return React.useMemo(() => new URLSearchParams(search), [search]);
 }
 

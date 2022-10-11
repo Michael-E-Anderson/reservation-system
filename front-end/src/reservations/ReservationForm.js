@@ -72,7 +72,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 min={1}
                 name="people"
                 onChange={handleChange}
-                value={reservation.people}
+                defaultValue={reservation.people}
                 placeholder="Number of Guests"
                 required
               />

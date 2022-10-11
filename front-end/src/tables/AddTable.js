@@ -8,7 +8,7 @@ import TablesForm from "./TablesForm";
 function AddTable() {
     const mountedRef = useRef(false);
     const history = useHistory();
-    const [error, setError] = useState("");
+    //const [error, setError] = useState("");
 
     useEffect(() => {
       mountedRef.current = true;
@@ -73,11 +73,11 @@ function AddTable() {
           <TablesForm
             handleChange={changeHandler}
             handleSubmit={handleSubmit}
-            reservation={formData}
+            tables={formData}
           />
-          <div className="alert pt-2">
+          {/* <div className="alert pt-2">
             <p className="alert-danger">{error}</p>
-          </div>
+          </div> */}
         </div>
       </>
     );

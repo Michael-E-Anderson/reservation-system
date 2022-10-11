@@ -20,13 +20,14 @@ function Routes() {
       <Route exact={true} path="/">
         <Redirect to={"/dashboard"} />
       </Route>
-      <Route exact={true} path="/reservations">
-        <Redirect to={"/dashboard"} />
+      <Route exact={true} path="/reservations" render={props => {
+        return <Redirect to={`/dashboard${props.location.search || ""}`} />
+      }}>        
       </Route>
       <Route exact={true} path="/reservations/new">
        <AddReservation />
       </Route>
-      <Route exact={true} path="tables/new">
+      <Route exact={true} path="/tables/new">
         <AddTable />
       </Route>
       <Route path="/dashboard">
