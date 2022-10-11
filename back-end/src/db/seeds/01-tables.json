@@ -1,0 +1,20 @@
+[
+  {
+    "table_name": "01",
+    "capacity": 4,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
+  },
+  {
+    "table_name": "02",
+    "capacity": 8,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
+  },
+  {
+    "table_name": "03",
+    "capacity": 6,
+    "created_at": "2020-12-10T08:30:32.326Z",
+    "updated_at": "2020-12-10T08:30:32.326Z"
+  }
+]

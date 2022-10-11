@@ -125,11 +125,9 @@ function Dashboard({ date }) {
   const [reservationsError, setReservationsError] = useState(null);
   const params = useQuery()
   const filteredDate = params.get("date") || date
-  console.log(filteredDate, params.get("date"))
   useEffect(loadDashboard, [filteredDate]);
 
   function loadDashboard() {
-    console.log("111")
     const abortController = new AbortController();
     setReservationsError(null);
     listReservations({ date: filteredDate }, abortController.signal)

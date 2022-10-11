@@ -2,11 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
+import { createReservation } from "../utils/api";
 import ReservationForm from "./ReservationForm";
-
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://git.heroku.com/reservation-system-thinkful.git" : "http://localhost:3001/reservations";
 
 
       function AddReservation() {
@@ -60,66 +57,21 @@ const BASE_URL =
 
         const [formData, setFormData] = useState([]);
         const changeHandler = ({ target }) => {
-            console.log("change")
           setFormData( {
             ...formData,
             [target.name]: target.value,
           });
         };
 
-        async function createReservation(data) {
-            mountedRef.current = true
-          const response = await fetch(`${BASE_URL}?first_name=${data.first_name}&last_name=${data.last_name}&mobile_number=${data.mobile_number}&reservation_date=${data.reservation_date}&reservation_time=${data.reservation_time}&people=${data.people}`, {
-            method: "POST",
-            headers: {contentType: "application/json"},
-            body: JSON.stringify(data),
-          }).catch(error => {console.error(error)
-        return Promise.reject(error)});
-
-
-          return await response;
-        }
-
-        function closed(formData) {
-             const resDate = formData.reservation_date;
-             const resTime = formData.reservation_time;
-             const resHour = parseInt(resTime.substring(0, 3))
-             const resMinutes = parseInt(resTime.substring(3, 6))
-             const year = parseInt(resDate.substring(0, 4))
-             const month = parseInt(resDate.substring(5, 7))
-             const day = parseInt(resDate.substring(8, 10))
-             const date = new Date(Date.UTC(year, month, day)).toString()
-             const resDay = date.substring(0, 3);
-             const now = new Date()
-             const nowHour = now.getHours()
-             const nowMinutes = now.getMinutes()
-             const nowDay = now.getDay() + 2
-             const nowMonth = now.getMonth() + 1
-
-             if (resDay === "Tue") {
-                 return true
-             } else if (nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
-                 return true
-             } else if (resTime < "10:30" || resTime > "21:30" ) {
-                 return true
-             } else {
-                 return false
-             }
-        }
+        
 
         const handleSubmit = async (event) => {
           event.preventDefault();
           const response = await createReservation(formData);        
-          if (response.ok && !closed(formData)) {
           history.push(`/reservations?date=${formData.reservation_date}`);
           setFormData(initialFormState)
-        } else if (closed(formData)) {
-          setError(
-            `You cannot make a reservation on ${formData.reservation_date} at ${formData.reservation_time}.  Please select another date and/or time.`
-          );
-        } else {
-          setError("There must be at least 1 guest on the reservation.");
-        };
+
+          return response
         };
 
         return (

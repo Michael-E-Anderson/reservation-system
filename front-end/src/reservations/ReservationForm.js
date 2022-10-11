@@ -1,18 +1,9 @@
 import React from "react";
-import { useHistory } from "react-router-dom"
-import { today } from "../utils/date-time";
+import { useHistory } from "react-router";
 
 function ReservationForm({ handleSubmit, handleChange, reservation }) {
-    const history = useHistory();
-    let min = today()
+    const history = useHistory()
 
-    function closed(date) {
-        const day = date.toLocaleDateString({weekday: 'long'})
-        const error = "The restaurant will be closed this day."
-        if (day === "Tuesday") {
-            throw error
-        }
-    }
 
     return (
       <>
@@ -56,7 +47,6 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
               <input
                 id="reservation_date"
                 type="date"
-                min={min}
                 name="reservation_date"
                 onChange={handleChange}
                 value={reservation.reservationDate}
