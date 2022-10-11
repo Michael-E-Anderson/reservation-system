@@ -4,6 +4,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
 /**
  * List handler for reservation resources
  */
+
 async function list(req, res) {
   const data = await service.list(req.query.date)
   const sortedReservations = [...data].sort((a, b) =>
@@ -67,29 +68,17 @@ function inTheFuture(req, res, next) {
 }
 
 function openHours(req, res, next) {
-  const resDate = req.query.reservation_date || req.body.data?.reservation_date;
-             const resTime = req.query.reservation_time || req.body.data?.reservation_time;
-             const resHour = parseInt(resTime.substring(0, 3))
-             const resMinutes = parseInt(resTime.substring(3, 6))
-             const year = parseInt(resDate.substring(0, 4))
-             const month = parseInt(resDate.substring(5, 7))
-             const day = parseInt(resDate.substring(8, 10))
-             const date = new Date(Date.UTC(year, month, day)).toString()          
-             const now = new Date()
-             const nowHour = now.getHours()
-             const nowMinutes = now.getMinutes()
-             const nowDay = now.getDay() + 2
-             const nowMonth = now.getMonth() + 1
+  const resTime = req.query.reservation_time || req.body.data?.reservation_time;
 
-            if (resTime < "10:30" || resTime > "21:30" ) {
-                 return next({
-                   status: 400,
-                   message: "reservation_time must be made between 10:30AM and 9:30PM."
-                 })
-             } else {
-                 return next()
-             }
-        } 
+  if (resTime < "10:30" || resTime > "21:30" ) {
+    return next({
+        status: 400,
+        message: "reservation_time must be made between 10:30AM and 9:30PM."
+      })
+    } else {
+      return next()
+    }
+} 
 
 function peopleQuantity(req, res, next) {
   const people = req.query.people || req.body.data?.people
@@ -102,12 +91,12 @@ function peopleQuantity(req, res, next) {
 }
 
 function peopleIsANumber(req, res, next){
-  const people = req.query.people || req.body.data?.people
-  if(typeof people !== "number") {
+  const people = req.query.people || req.body.data?.people;
+  if(typeof people !== "number" && (req.body.data?.people)) {
     next({
       status: 400,
-      message: "people must be a number."
-    })
+      message: `people must be a number.`,
+    });
   } else {
     return next()
   }
