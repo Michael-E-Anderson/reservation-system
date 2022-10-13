@@ -1,6 +1,14 @@
 const service = require("./tables.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
+async function list(req, res) {
+  const data = await service.list();
+  const sortedTables = [...data].sort((a, b) =>
+    a.table_name.localeCompare(b.table_name)
+  );
+  res.json({ data: sortedTables });
+}
+
 function bodyHasData(propertyName) {
   return function (req, res, next) {
     const data = { ...req.body.data, ...req.query };
@@ -46,12 +54,24 @@ async function create(req, res) {
 }
 
 
+
+async function update(req, res) {
+  console.log(req.body.data, 123);
+  const updatedTable = await service.update(req.body.data)
+  
+
+  res.status(201).json({ data: updatedTable})
+}
+
+
 module.exports = {
+  list: [asyncErrorBoundary(list)],
   create: [
       bodyHasData("table_name"), 
       bodyHasData("capacity"),
       nameLength,
       hasCapacity,
-      create
+      asyncErrorBoundary(create)
     ],
+  update: [asyncErrorBoundary(update)]
 };

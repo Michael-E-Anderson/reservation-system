@@ -54,11 +54,11 @@ function inTheFuture(req, res, next) {
   const now = new Date();
   const nowHour = now.getHours();
   const nowMinutes = now.getMinutes();
-  const nowDay = now.getDay() + 2;
+  const nowDay = now.getDate();
   const nowMonth = now.getMonth() + 1;
   const nowYear = now.getFullYear()
   
-  if (year < nowYear || year === nowYear && month < nowMonth || nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
+  if (year < nowYear || year === nowYear && month < nowMonth || year === nowYear && month === nowMonth && day < nowDay || nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
     next({
       status: 400,
       message: "reservation_time and reservation_date must be made for a future date and time."
