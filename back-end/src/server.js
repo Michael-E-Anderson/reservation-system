@@ -7,7 +7,8 @@ knex.migrate
   .latest()
   .then((migrations) => {
     console.log("migrations", migrations);
-    app.listen(PORT, listener);
+    const server = app.listen(PORT, listener);
+    server.setTimeout(500000)
   })
   .catch((error) => {
     console.error(error);

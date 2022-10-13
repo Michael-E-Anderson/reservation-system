@@ -8,6 +8,13 @@ function list(date) {
       .where({ reservation_date: date })
 }
 
+function listReservation(reservation_id) {
+    console.log(reservation_id.reservation_id, 123)
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id: reservation_id.reservation_id })
+}
+
 function create(reservation) {
     return knex("reservations")
         .insert(reservation)
@@ -17,5 +24,6 @@ function create(reservation) {
 
 module.exports = {
     create,
-    list
+    list,
+    listReservation,
 }

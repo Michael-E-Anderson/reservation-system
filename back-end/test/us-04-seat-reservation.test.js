@@ -246,7 +246,7 @@ describe("US-04 - Seat reservation", () => {
         const response = await request(app)
           .put(`/tables/${barTableOne.table_id}/seat`)
           .set("Accept", "application/json")
-          .send({ data: { reservation_id: 1 } });
+          .send({ data: { reservation_id: 4 } });
 
         expect(response.body.error).toContain("capacity");
         expect(response.status).toBe(400);

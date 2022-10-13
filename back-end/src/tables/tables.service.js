@@ -5,7 +5,11 @@ function list() {
     .select("*")
 }
 
-
+function listTable(table_id) {
+  return knex("tables")
+    .select("*")
+    .where({ table_id: table_id })
+}
 
 function create(table) {
   return knex("tables")
@@ -13,15 +17,19 @@ function create(table) {
     .returning("*")
     .then((createTable) => createTable[0]);
 }
-// add where clause to update to update specific table.
-function update(updatedTable) {
+
+function update(updatedTable, tableId) {
   return knex("tables")
-    .update(updatedTable)
+    .select("*")
+    .where({ table_id: tableId})
+    .update(updatedTable, "*")
     .returning("*")
+
 }
 
 module.exports = {
     create,
     list,
     update,
+    listTable,
 }

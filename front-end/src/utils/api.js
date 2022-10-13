@@ -184,6 +184,9 @@ export async function listTables(signal) {
  *  a promise that resolves to the response from the server. Which may be empty.
  */
 export async function seatReservation(reservation_id, table_id) {
+  if(!reservation_id) {
+    throw new Error("no reservation provided")
+  }
   const url = `${API_BASE_URL}/tables/${table_id}/seat`;
   const options = {
     method: "PUT",

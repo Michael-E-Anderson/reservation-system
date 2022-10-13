@@ -7,18 +7,18 @@ import ReservationForm from "./ReservationForm";
 
 
       function AddReservation() {
-        const mountedRef = useRef(false);
+        // const mountedRef = useRef(false);
         const history = useHistory()
         const [error, setError] = useState("")
         // const { reservationId } = useParams();
         // const [reservation, setReservation] = useState([]);
 
-        useEffect(() => {
-          mountedRef.current = true;
-          return () => {
-            mountedRef.current = false;
-          };
-        }, []);
+        // useEffect(() => {
+        //   mountedRef.current = true;
+        //   return () => {
+        //     mountedRef.current = false;
+        //   };
+        // }, []);
 
         // function readReservation(id, signal) {
         //   const response = fetch(BASE_URL);

@@ -1,4 +1,5 @@
 const service = require("./tables.service");
+const reservationsService = require("../reservations/reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
 async function list(req, res) {
@@ -53,14 +54,62 @@ async function create(req, res) {
   res.status(201).json({ data });
 }
 
+async function tableCanFitReservation(req, res, next) {
+  const reservation = await reservationsService.listReservation(req.body.data)
+  const table = await service.listTable(req.params.table_id)
 
+    if(table[0].capacity < reservation[0].people) {
+      next({
+        status: 400,
+        message: "The guest count must be less than the table's capacity"
+      })
+    } else {
+      return next()
+    }
+}
+
+async function tableIsFree(req, res, next) {
+  const table = await service.listTable(req.params.table_id)
+
+  if(table[0].reservation_id !== null) {
+    next({
+      status: 400,
+      message: "This table is occupied."
+    })
+  } else {
+    return next()
+  }
+}
+
+async function reservationExists(req, res, next) {
+  const reservation = await reservationsService.listReservation(req.body.data)
+
+  if(!reservation.length) {
+    next({
+      status: 404,
+      message: `Reservation ${req.body.data.reservation_id} does not exist.`
+    })
+  } else {
+    return next()
+  }
+}
+
+function capacityIsANumber(req, res, next) {
+  const capacity = req.body.data.capacity
+
+  if (typeof capacity === "number") {
+    return next()
+  } else {
+    next({
+      status: 400,
+      message: "The capacity must be a number."
+    })
+  }
+}
 
 async function update(req, res) {
-  console.log(req.body.data, 123);
-  const updatedTable = await service.update(req.body.data)
-  
-
-  res.status(201).json({ data: updatedTable})
+  const updatedTable = await service.update(req.body.data, req.params.table_id)
+  res.status(200).json({ data: updatedTable})
 }
 
 
@@ -71,7 +120,14 @@ module.exports = {
       bodyHasData("capacity"),
       nameLength,
       hasCapacity,
+      capacityIsANumber,
       asyncErrorBoundary(create)
     ],
-  update: [asyncErrorBoundary(update)]
+  update: [
+    bodyHasData("reservation_id"),
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(tableIsFree),
+    asyncErrorBoundary(tableCanFitReservation),
+    asyncErrorBoundary(update)
+  ]
 };

@@ -13,6 +13,11 @@ async function list(req, res) {
   res.json({ data: sortedReservations });
 }
 
+async function listReservation(req, res) {
+  const data = await service.listReservation(req.params.reservation_Id)
+  res.status(200).json({ data })
+}
+
 function bodyHasData(propertyName) {
   return function(req, res, next) {
     const data = {...req.body.data, ...req.query};
@@ -121,6 +126,7 @@ async function create(req, res) {
 
 module.exports = {
   list: asyncErrorBoundary(list),
+  listReservation: asyncErrorBoundary(listReservation),
   create: [
     bodyHasData("first_name"),
     bodyHasData("last_name"),
