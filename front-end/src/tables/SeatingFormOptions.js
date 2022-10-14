@@ -2,7 +2,7 @@ import React from "react";
 
 function SeatingFormOptions({ table }) {
     return (
-        <option value={table.table_id}>Table: {table.table_name} - Capacity: {table.capacity}</option>
+        <option value={table.table_id}>{table.table_name} - {table.capacity}</option>
     )
 }
 

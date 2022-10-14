@@ -1,11 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useHistory } from "react-router";
 
 const BASE_URL =
   process.env.NODE_ENV === "production"
     ? "https://git.heroku.com/reservation-system-thinkful.git"
-    : "http://localhost:3001";
+    : "http://localhost:5001";
 
 function ReservationView({ reservation }) {
     const history = useHistory()
@@ -46,15 +47,12 @@ function ReservationView({ reservation }) {
                 </div>
               </div>
               <div className="ml-auto p-2 pt-4">
-                <button
-                  type="button"
+                <Link
+                  to={`/reservations/${reservation.reservation_id}/seat`}
                   className="btn btn-primary pl-4 pr-4"
-                  onClick={() =>
-                    history.push(`/reservations/${reservation.reservation_id}/seat`)
-                  }
                 >
                   Seat
-                </button>
+                </Link>
               </div>
             </div>
           </div>

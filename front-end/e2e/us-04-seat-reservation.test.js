@@ -19,7 +19,7 @@ describe("US-04 - Seat reservation - E2E", () => {
 
   beforeAll(async () => {
     await fsPromises.mkdir("./.screenshots", { recursive: true });
-    setDefaultOptions({ timeout: 10000 });
+    setDefaultOptions({ timeout: 30000 });
     browser = await puppeteer.launch();
   });
 
@@ -42,23 +42,23 @@ describe("US-04 - Seat reservation - E2E", () => {
       await page.type("input[name=capacity]", "6");
 
       await page.screenshot({
-        path: ".screenshots/us-04-create-table-submit-before.png",
+        path: ".screenshots/us-04-ssscreate-table-submit-before.png",
         fullPage: true,
       });
 
       await Promise.all([
         page.click("button[type=submit]"),
-        page.waitForNavigation({ waitUntil: "networkidle2", timeout: 0 }),
+        page.waitForNavigation({ waitUntil: "networkidle0" }),
       ]);
 
       await page.screenshot({
-        path: ".screenshots/us-04-create-table-submit-after.png",
+        path: ".screenshots/us-04-ssscreate-table-submit-after.png",
         fullPage: true,
       });
 
-      await expect(page).toMatch(tableName);
+      expect(page).toMatch(tableName);
     }, 100000);
-    test.skip("omitting table_name and submitting does not create a new table", async () => {
+    test("omitting table_name and submitting does not create a new table", async () => {
       await page.type("input[name=capacity]", "3");
 
       await page.screenshot({
@@ -75,7 +75,7 @@ describe("US-04 - Seat reservation - E2E", () => {
 
       expect(page.url()).toContain("/tables/new");
     });
-    test.skip("entering a single character table_name and submitting does not create a new table", async () => {
+    test("entering a single character table_name and submitting does not create a new table", async () => {
       await page.type("input[name=table_name]", "1");
       await page.type("input[name=capacity]", "6");
 
@@ -93,7 +93,7 @@ describe("US-04 - Seat reservation - E2E", () => {
 
       expect(page.url()).toContain("/tables/new");
     });
-    test.skip("omitting capacity and submitting does not create a new table", async () => {
+    test("omitting capacity and submitting does not create a new table", async () => {
       await page.type("input[name=table_name]", "Omit capacity");
 
       await page.screenshot({
@@ -110,7 +110,7 @@ describe("US-04 - Seat reservation - E2E", () => {
 
       expect(page.url()).toContain("/tables/new");
     });
-    test.skip("canceling form returns to previous page", async () => {
+    test("canceling form returns to previous page", async () => {
       await page.goto(`${baseURL}/reservations/new`, {
         waitUntil: "networkidle0",
       });
@@ -169,7 +169,7 @@ describe("US-04 - Seat reservation - E2E", () => {
       );
     });
 
-    test.skip("seating reservation at table #1 makes the table occupied", async () => {
+    test("seating reservation at table #1 makes the table occupied", async () => {
       await page.waitForSelector('option:not([value=""])');
 
       await page.screenshot({
@@ -198,7 +198,7 @@ describe("US-04 - Seat reservation - E2E", () => {
       expect(page).toMatch(/occupied/i);
     });
 
-    test.skip("cannot seat reservation at Bar #1", async () => {
+    test("cannot seat reservation at Bar #1", async () => {
         await page.waitForSelector('option:not([value=""])');
 
         await page.screenshot({
@@ -248,7 +248,7 @@ describe("US-04 - Seat reservation - E2E", () => {
     });
 
     // eslint-disable-next-line no-template-curly-in-string
-    test.skip("seat button has href with /reservations/${reservation_id}/seat", async () => {
+    test("seat button has href with /reservations/${reservation_id}/seat", async () => {
       await page.screenshot({
         path: ".screenshots/us-04-dashboard-seat-button-before.png",
         fullPage: true,

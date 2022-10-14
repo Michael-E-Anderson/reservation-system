@@ -26,7 +26,7 @@ function AddTable() {
     const changeHandler = ({ target }) => {
       setFormData({
         ...formData,
-        [target.name]: target.value,
+        [target.name]: target.name === "capacity" ? parseInt(target.value) : target.value,
       });
     };
 
