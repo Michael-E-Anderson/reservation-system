@@ -83,7 +83,6 @@ async function tableIsFree(req, res, next) {
 
 async function reservationExists(req, res, next) {
   const reservation = await reservationsService.listReservation(req.body.data)
-
   if(!reservation.length) {
     next({
       status: 404,
@@ -112,6 +111,35 @@ async function update(req, res) {
   res.status(200).json({ data: updatedTable})
 }
 
+async function tableIsOccupied(req, res, next) {
+  const table = await service.listTable(req.params.table_id)
+  
+  if (table[0].reservation_id === null) {
+    next({
+      status: 400,
+      message: "This table is not occupied."
+    })
+  } return next()
+}
+
+async function tableExists(req, res, next) {
+  const table = await service.listTable(req.params.table_id)
+
+  if (!table.length){ 
+    next({
+      status: 404,
+      message: `Table ${req.params.table_id} does not exist.`,
+    });
+  } else {
+    return next();
+  }
+}
+
+async function destroy(req, res) {
+  const finishedTable = await service.destroy(req.params.table_id)
+  res.status(200).json({ data: finishedTable })
+}
+
 
 module.exports = {
   list: [asyncErrorBoundary(list)],
@@ -129,5 +157,10 @@ module.exports = {
     asyncErrorBoundary(tableIsFree),
     asyncErrorBoundary(tableCanFitReservation),
     asyncErrorBoundary(update)
+  ],
+  delete: [
+    asyncErrorBoundary(tableExists),
+    asyncErrorBoundary(tableIsOccupied),
+    asyncErrorBoundary(destroy)
   ]
 };

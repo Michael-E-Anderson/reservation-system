@@ -9,7 +9,6 @@ function list(date) {
 }
 
 function listReservation(reservation_id) {
-    console.log(reservation_id.reservation_id, 123)
     return knex("reservations")
         .select("*")
         .where({ reservation_id: reservation_id.reservation_id })
