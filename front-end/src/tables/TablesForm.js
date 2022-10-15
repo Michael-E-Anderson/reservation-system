@@ -15,7 +15,7 @@ function TablesForm({ handleChange, handleSubmit, tables }) {
                 type="text"
                 name="table_name"
                 onChange={handleChange}
-                value={tables.table_name}
+                value={tables.table_name || ""}
                 placeholder="Table Name"
                 required
               />
@@ -26,7 +26,7 @@ function TablesForm({ handleChange, handleSubmit, tables }) {
                 type="number"
                 name="capacity"
                 onChange={handleChange}
-                value={tables.capacity}
+                value={tables.capacity || ""}
                 placeholder="Capacity"
                 required
               />

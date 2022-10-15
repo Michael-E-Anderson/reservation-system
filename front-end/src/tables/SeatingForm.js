@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
-import { seatReservation } from "../utils/api";
+import { seatReservation, updateReservation } from "../utils/api";
 import { listTables } from "../utils/api";
 import SeatingFormOptions from "./SeatingFormOptions";
 
@@ -13,7 +13,6 @@ function SeatingForm() {
     const { reservation_id } = useParams()
 
     useEffect(loadTables, [])
-    console.log(reservation_id)
     
 
     function loadTables() {
@@ -34,8 +33,9 @@ function SeatingForm() {
 
     const handleSubmit = async (event) => {
       event.preventDefault();
-      console.log(formData.table_id)
+      // const abortController = new AbortController
       seatReservation(reservation_id, formData.table_id).then(() => {
+        // updateReservation(reservation_id, abortController.signal);
         history.push(`/dashboard`);
       }).catch(err => {
         setError(err.message)

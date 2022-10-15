@@ -107,6 +107,8 @@ function capacityIsANumber(req, res, next) {
 }
 
 async function update(req, res) {
+  const table = await service.listTable(req.params.table_id)
+  await reservationsService.update(req.body.data.reservation_id, "seated")
   const updatedTable = await service.update(req.body.data, req.params.table_id)
   res.status(200).json({ data: updatedTable})
 }
@@ -134,8 +136,23 @@ async function tableExists(req, res, next) {
     return next();
   }
 }
+async function reservationSeated(req, res, next) {
+  // const table = await service.listTable(req.params.table_id)
+  const reservation = await reservationsService.listReservation(req.body.data);
+  // console.log(table[0])
+  if (reservation[0].status === "seated") {
+    next({
+      status: 400,
+      message: "This reservation has already been seated.",
+    });
+  } else {
+    return next();
+  }
+}
 
 async function destroy(req, res) {
+  const table = await service.listTable(req.params.table_id)
+  await reservationsService.update(table[0].reservation_id, "finished")
   const finishedTable = await service.destroy(req.params.table_id)
   res.status(200).json({ data: finishedTable })
 }
@@ -154,6 +171,7 @@ module.exports = {
   update: [
     bodyHasData("reservation_id"),
     asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(reservationSeated),
     asyncErrorBoundary(tableIsFree),
     asyncErrorBoundary(tableCanFitReservation),
     asyncErrorBoundary(update)

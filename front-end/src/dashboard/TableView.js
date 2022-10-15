@@ -1,19 +1,21 @@
 import React from "react";
-import { useHistory } from "react-router";
-import { finishTable, listTables } from "../utils/api";
+import { finishTable, updateReservation, readReservation } from "../utils/api";
 
 function TableView({ table }) {
-  const history = useHistory();
 
-  function handleFinish(event) {
+  async function handleFinish(event) {
     event.preventDefault();
     if (
       window.confirm(
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
-      finishTable(table.table_id, table.reservation_id)
-        .then(window.location.reload());
+      const abortController = new AbortController
+      const reservation = await readReservation(table.reservation_id, abortController.signal)
+      console.log(reservation)
+      await updateReservation(reservation, abortController.signal)
+        .then(finishTable(table.table_id, table.reservation_id))
+        .then(window.location.reload);
     }
   }
   

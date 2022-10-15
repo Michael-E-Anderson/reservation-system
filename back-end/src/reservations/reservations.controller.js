@@ -10,12 +10,12 @@ async function list(req, res) {
   const sortedReservations = [...data].sort((a, b) =>
     a.reservation_time.localeCompare(b.reservation_time)
   );
-  res.json({ data: sortedReservations });
+  res.json({ data: sortedReservations.filter(reservation => reservation.status !== "finished") });
 }
 
 async function listReservation(req, res) {
-  const data = await service.listReservation(req.params.reservation_Id)
-  res.status(200).json({ data })
+  const data = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id)
+  res.status(200).json({ data: data[0] })
 }
 
 function bodyHasData(propertyName) {
@@ -119,10 +119,79 @@ function dateIsDate(req, res, next) {
   }
 }
 
+function statusIsNotBooked(req, res, next) {
+  const status = req.query.status || req.body.data?.status
+  if (status !== "booked" && status !== undefined) {
+    next({
+      status: 400,
+      message: `The status cannot start as "${status}"`
+    })
+  } else {
+    return next()
+  }
+}
+
 async function create(req, res) {
   const data = await service.create(req.query.people? req.query : req.body.data)
   res.status(201).json({ data })
 }
+
+async function update(req, res) {
+  const status = req.body.data.status
+  const reservation = await service.listReservation(req.params.reservation_id)
+
+  if (reservation[0].status === "booked") {
+    let newStatus = await service.update(reservation[0].reservation_id, status)
+    res.status(200).json({ data: { status: status } })
+  } else {
+    let newStatus = await service.update(
+      reservation[0].reservation_id,
+      "finished"
+    );
+    res.status(200).json({ data: { status: newStatus } })
+  }
+}
+
+async function reservationExists(req, res, next) {
+  const reservation = await service.listReservation(req.params.reservation_id)
+
+  if (reservation.length) {
+    next()
+  } else {
+    next({
+      status: 404,
+      message: `Reservation ${req.params.reservation_id} does not exist`
+    })
+  }
+}
+
+function reservationHasStatus(req, res, next) {
+  // const reservation = service.listReservation(req.params.reservation_id)
+  const status = req.body.data.status
+  if (status === "unknown") {
+    next({
+      status: 400,
+      message: `Reservation ${req.params.reservation_id}'s status is unknown.`,
+    });
+  } else {
+    return next()
+  }
+}
+
+async function statusIsFinished (req, res, next) {
+  const reservation = await service.listReservation(req.params.reservation_id)
+
+  if (reservation[0].status === "finished") {
+    next ({
+      status: 400,
+      message: `Reservation ${req.params.reservation_id} is finished and cannot be changed.`
+    })
+  } else {
+    next()
+  }
+}
+
+
 
 module.exports = {
   list: asyncErrorBoundary(list),
@@ -140,6 +209,14 @@ module.exports = {
     notATuesday,
     inTheFuture,
     openHours,
+    statusIsNotBooked,
     asyncErrorBoundary(create),
+  ],
+  update: [
+    bodyHasData("status"),
+    asyncErrorBoundary(reservationExists),
+    reservationHasStatus,
+    asyncErrorBoundary(statusIsFinished),
+    asyncErrorBoundary(update),
   ],
 };

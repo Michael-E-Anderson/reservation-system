@@ -1,35 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useEffect } from "react";
-import { useHistory } from "react-router";
-
-const BASE_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://git.heroku.com/reservation-system-thinkful.git"
-    : "http://localhost:5001";
+import { updateReservation } from "../utils/api";
 
 function ReservationView({ reservation }) {
-    const history = useHistory()
+    const abortController = new AbortController
 
+    function handleUpdate() {
+      updateReservation(reservation, abortController.signal)
+    }
 
-    // async function getReservation(reservation, signal) {
-    //   const response = fetch(BASE_URL, {
-    //     method: "GET",
-    //   });
-
-    //   return response;
-    // }
-
-    // useEffect(() => {
-    //     const abortController = new AbortController();
-
-    //     async function loadReservation() {
-    //         await getReservation(reservation, abortController.signal)
-    //     }
-    //     loadReservation()
-    // }, [reservation])
-
-    return (
+    return ( reservation.status !== "finished" &&
       <>
         <div className="container">
           <div className="border border-secondary mt-2">
@@ -44,16 +24,18 @@ function ReservationView({ reservation }) {
                     {reservation.reservation_time} for {reservation.people}{" "}
                     guest(s)
                   </p>
+                  <p className="ml-4" data-reservation-id-status={reservation.reservation_id}>Status: <strong>{reservation.status}</strong> </p> 
                 </div>
               </div>
-              <div className="ml-auto p-2 pt-4">
+              {reservation.status === "seated" ? <div></div> : <div className="ml-auto p-2 pt-4">
                 <Link
                   to={`/reservations/${reservation.reservation_id}/seat`}
                   className="btn btn-primary pl-4 pr-4"
+                  onClick={handleUpdate}
                 >
                   Seat
                 </Link>
-              </div>
+              </div>}
             </div>
           </div>
         </div>

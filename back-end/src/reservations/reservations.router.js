@@ -12,7 +12,11 @@ router.route("/").get(controller.list);
 
 router.route("/").post(controller.create)
 
-router.route("/:reservation_Id").get(controller.listReservation)
+router.route("/:reservation_id").get(controller.listReservation)
+
+router.route("/:reservation_id/status").put(controller.update);
+
+// router.route("/:reservation_Id")
 
 
 

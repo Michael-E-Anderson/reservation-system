@@ -46,15 +46,6 @@ import ReservationForm from "./ReservationForm";
         //   return () => abortController.abort();
         // }, [reservationId]);
 
-        const initialFormState = {
-          first_name: "",
-          last_name: "",
-          mobile_number: "",
-          reservation_date: "",
-          reservation_time: "",
-          people: 0,
-        };
-
         const [formData, setFormData] = useState([]);
         const changeHandler = ({ target }) => {
           setFormData( {
@@ -69,7 +60,6 @@ import ReservationForm from "./ReservationForm";
           event.preventDefault();
           createReservation(formData).then(() => {
             history.push(`/reservations?date=${formData.reservation_date}`);
-            setFormData(initialFormState);
           }).catch(err => {
             setError(err.message)
           });        

@@ -11,7 +11,7 @@ function list(date) {
 function listReservation(reservation_id) {
     return knex("reservations")
         .select("*")
-        .where({ reservation_id: reservation_id.reservation_id })
+        .where({ reservation_id: (reservation_id.reservation_id) ? reservation_id.reservation_id : reservation_id })
 }
 
 function create(reservation) {
@@ -21,8 +21,18 @@ function create(reservation) {
         .then((createReservation) => createReservation[0])
 }
 
+function update(reservation_id, status) {
+
+    return knex("reservations")
+        .select("*")
+        .where({ reservation_id: reservation_id })
+        .update("status", status)
+        .returning("*")
+}
+
 module.exports = {
     create,
     list,
     listReservation,
+    update,
 }
