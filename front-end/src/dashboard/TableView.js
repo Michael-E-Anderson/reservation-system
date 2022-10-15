@@ -12,10 +12,9 @@ function TableView({ table }) {
     ) {
       const abortController = new AbortController
       const reservation = await readReservation(table.reservation_id, abortController.signal)
-      console.log(reservation)
       await updateReservation(reservation, abortController.signal)
-        .then(finishTable(table.table_id, table.reservation_id))
-        .then(window.location.reload);
+        .then(await finishTable(table.table_id, table.reservation_id))
+        .then(window.location.reload());
     }
   }
   
