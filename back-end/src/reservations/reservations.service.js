@@ -1,11 +1,18 @@
 const knex = require("../db/connection")
 
-
-//TODO: play with list to learn more about how it's working
 function list(date) {
     return knex("reservations")
       .select("*")
       .where({ reservation_date: date })
+}
+
+function search(mobile_number) {
+  return knex("reservations")
+    .whereRaw(
+      "translate(mobile_number, '() -', '') like ?",
+      `%${mobile_number.replace(/\D/g, "")}%`
+    )
+    .orderBy("reservation_date");
 }
 
 function listReservation(reservation_id) {
@@ -35,4 +42,5 @@ module.exports = {
     list,
     listReservation,
     update,
+    search,
 }

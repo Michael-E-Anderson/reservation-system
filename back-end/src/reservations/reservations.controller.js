@@ -6,11 +6,29 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
  */
 
 async function list(req, res) {
-  const data = await service.list(req.query.date)
-  const sortedReservations = [...data].sort((a, b) =>
-    a.reservation_time.localeCompare(b.reservation_time)
-  );
-  res.json({ data: sortedReservations.filter(reservation => reservation.status !== "finished") });
+
+  if(req.query.date) {
+    const data = await service.list(req.query.date);
+    const sortedReservations = [...data].sort((a, b) =>
+      a.reservation_time.localeCompare(b.reservation_time)
+    );
+    res.json({
+      data: sortedReservations.filter(
+        (reservation) => reservation.status !== "finished"
+      ),
+    });
+  }
+
+  if (req.query.mobile_number) {
+    const data = await service.search(req.query.mobile_number)
+    if(data){
+      res.json({ data: data });
+    } else {
+      res.status(404).message("Reservation not found.")
+    }
+    
+  }
+  
 }
 
 async function listReservation(req, res) {
