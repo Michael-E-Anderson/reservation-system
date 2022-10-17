@@ -27,6 +27,6 @@ function SearchForm({ handleChange, handleSearch, mobile_number }) {
         </form>
       </>
     );
-}
+};
 
-export default SearchForm
+export default SearchForm;

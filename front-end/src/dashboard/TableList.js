@@ -11,6 +11,6 @@ function TableList({ tables }) {
         </div>
       </>
     );
-}
+};
 
-export default TableList
+export default TableList;

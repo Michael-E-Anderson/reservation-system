@@ -10,7 +10,7 @@ import TableList from "./TableList";
 function useQuery() {
   const { search } = useLocation();
   return React.useMemo(() => new URLSearchParams(search), [search]);
-}
+};
 
 /**
  * Defines the dashboard page.
@@ -20,11 +20,11 @@ function useQuery() {
  */
 function Dashboard({ date }) {
   const [reservations, setReservations] = useState([]);
-  const [tables, setTables] = useState([])
+  const [tables, setTables] = useState([]);
   const [reservationsError, setReservationsError] = useState(null);
-  const [tablesError, setTablesError] = useState(null)
-  const params = useQuery()
-  const filteredDate = params.get("date") || date
+  const [tablesError, setTablesError] = useState(null);
+  const params = useQuery();
+  const filteredDate = params.get("date") || date;
   useEffect(loadDashboard, [filteredDate]);
 
   function loadDashboard() {
@@ -37,7 +37,7 @@ function Dashboard({ date }) {
       .then(setTables)
       .catch(setTablesError)
     return () => abortController.abort();
-  }
+  };
 
   return (
     <main>
@@ -67,6 +67,6 @@ function Dashboard({ date }) {
       </div>
     </main>
   );
-}
+};
 
 export default Dashboard;

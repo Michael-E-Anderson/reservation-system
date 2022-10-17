@@ -5,11 +5,11 @@ import { readReservation, updateReservation } from "../utils/api";
 import ReservationForm from "./ReservationForm";
 
 function EditReservation() {
-    const mountedRef = useRef(false)
+    const mountedRef = useRef(false);
     const reservation_id = useParams();
     const history = useHistory();
     const [reservation, setReservation] = useState([]);
-    const [editReservation, setEditReservation] = useState([])
+    const [editReservation, setEditReservation] = useState([]);
     const abortController = new AbortController();
 
     useEffect(() => {
@@ -21,7 +21,7 @@ function EditReservation() {
 
     
 
-    useEffect(loadReservation, [reservation_id.reservation_id])
+    useEffect(loadReservation, [reservation_id.reservation_id]);
 
     async function loadReservation() { 
 
@@ -36,21 +36,21 @@ function EditReservation() {
             ).then(setEditReservation);
         
         return () => abortController.abort()
-    }
+    };
 
     const handleChange = ({ target }) => {
         setEditReservation((currentState) => ({
             ...currentState,
             [target.name]: target.name === "people" ? parseInt(target.value) : target.value,
         }))
-    }
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault()
         updateReservation(editReservation, abortController.signal).then(() => {
           history.push(`/dashboard?date=${editReservation.reservation_date}`);
         });
-    }
+    };
 
     return (
       <>
@@ -93,6 +93,6 @@ function EditReservation() {
         </div>
       </>
     );
-}
+};
 
-export default EditReservation
+export default EditReservation;

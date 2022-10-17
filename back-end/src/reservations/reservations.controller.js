@@ -17,7 +17,7 @@ async function list(req, res) {
         (reservation) => reservation.status !== "finished"
       ),
     });
-  }
+  };
 
   if (req.query.mobile_number) {
     const data = await service.search(req.query.mobile_number)
@@ -25,16 +25,14 @@ async function list(req, res) {
       res.json({ data: data });
     } else {
       res.status(404).message("Reservation not found.")
-    }
-    
-  }
-  
-}
+    }; 
+  };  
+};
 
 async function listReservation(req, res) {
-  const data = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id)
-  res.status(200).json({ data: data[0] })
-}
+  const data = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id);
+  res.status(200).json({ data: data[0] });
+};
 
 function bodyHasData(propertyName) {
   return function(req, res, next) {
@@ -46,8 +44,8 @@ function bodyHasData(propertyName) {
       status: 400,
       message: `Reservation must include ${propertyName}.`
     })
-  }
-}
+  };
+};
 
 function notATuesday(req, res, next) {
   const resDate = req.query.reservation_date || req.body.data?.reservation_date;
@@ -64,7 +62,7 @@ function notATuesday(req, res, next) {
     })
   }
     return next()
-}
+};
 
 function inTheFuture(req, res, next) {
   const resDate = req.query.reservation_date || req.body.data?.reservation_date;
@@ -79,7 +77,7 @@ function inTheFuture(req, res, next) {
   const nowMinutes = now.getMinutes();
   const nowDay = now.getDate();
   const nowMonth = now.getMonth() + 1;
-  const nowYear = now.getFullYear()
+  const nowYear = now.getFullYear();
   
   if (year < nowYear || year === nowYear && month < nowMonth || year === nowYear && month === nowMonth && day < nowDay || nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
     next({
@@ -88,7 +86,7 @@ function inTheFuture(req, res, next) {
     })
   } 
   return next() 
-}
+};
 
 function openHours(req, res, next) {
   const resTime = req.query.reservation_time || req.body.data?.reservation_time;
@@ -100,18 +98,18 @@ function openHours(req, res, next) {
       })
     } else {
       return next()
-    }
-} 
+    };
+} ;
 
 function peopleQuantity(req, res, next) {
-  const people = req.query.people || req.body.data?.people
+  const people = req.query.people || req.body.data?.people;
   if (people > 0) {
     return next()
   } next({
     status: 400,
     message: `The reservation must have a party of at least 1 people.`
-  })
-}
+  });
+};
 
 function peopleIsANumber(req, res, next){
   const people = req.query.people || req.body.data?.people;
@@ -122,11 +120,11 @@ function peopleIsANumber(req, res, next){
     });
   } else {
     return next()
-  }
-}
+  };
+};
 
 function dateIsDate(req, res, next) {
-  const date = req.query.reservation_date || req.body.data?.reservation_date
+  const date = req.query.reservation_date || req.body.data?.reservation_date;
   if(Date.parse(date) > 0) {
     return next();
   } else {
@@ -134,11 +132,11 @@ function dateIsDate(req, res, next) {
       status: 400,
       message: "The reservation_date must be a date."
     })    
-  }
-}
+  };
+};
 
 function statusIsNotBooked(req, res, next) {
-  const status = req.query.status || req.body.data?.status
+  const status = req.query.status || req.body.data?.status;
   if (status !== "booked" && status !== undefined) {
     next({
       status: 400,
@@ -146,25 +144,25 @@ function statusIsNotBooked(req, res, next) {
     })
   } else {
     return next()
-  }
-}
+  };
+};
 
 async function create(req, res) {
-  const data = await service.create(req.query.people? req.query : req.body.data)
-  res.status(201).json({ data })
-}
+  const data = await service.create(req.query.people? req.query : req.body.data);
+  res.status(201).json({ data });
+};
 
 async function update(req, res) {
-  const status = req.body.data.status
+  const status = req.body.data.status;
   
   if (status) {
     let updatedReservation = await service.updateReservation(req.body.data)
     res.status(200).json({ data: updatedReservation[0] })
-  } 
-}
+  };
+};
 
 async function reservationExists(req, res, next) {
-  const reservation = await service.listReservation(req.params.reservation_id)
+  const reservation = await service.listReservation(req.params.reservation_id);
 
   if (reservation.length) {
     next()
@@ -173,11 +171,11 @@ async function reservationExists(req, res, next) {
       status: 404,
       message: `Reservation ${req.params.reservation_id} does not exist`
     })
-  }
-}
+  };
+};
 
 function reservationHasStatus(req, res, next) {
-  const status = req.body.data.status
+  const status = req.body.data.status;
   if (status === "unknown") {
     next({
       status: 400,
@@ -185,11 +183,11 @@ function reservationHasStatus(req, res, next) {
     });
   } else {
     return next()
-  }
-}
+  };
+};
 
 async function statusIsFinished (req, res, next) {
-  const reservation = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id)
+  const reservation = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id);
 
   if (reservation[0].status === "finished") {
     next ({
@@ -198,16 +196,16 @@ async function statusIsFinished (req, res, next) {
     })
   } else {
     next()
-  }
-}
+  };
+};
 
 async function cancelReservation (req, res) {
-  const status = req.body.data.status
-  const reservation = await service.listReservation(req.params.reservation_id)
+  const status = req.body.data.status;
+  const reservation = await service.listReservation(req.params.reservation_id);
   const updatedStatus = await service.updateStatus(reservation[0].reservation_id, status);
 
-  res.status(200).json({ data: updatedStatus[0] })
-}
+  res.status(200).json({ data: updatedStatus[0] });
+};
 
 
 

@@ -17,6 +17,6 @@ function DateButtons({ previous, today, next }) {
       </Link>
     </div>
   );
-}
+};
 
 export default DateButtons;

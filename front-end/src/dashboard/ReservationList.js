@@ -13,7 +13,7 @@ function ReservationList({ reservations }) {
                 )}
             </div>
         </>
-    )
-}
+    );
+};
 
-export default ReservationList
+export default ReservationList;

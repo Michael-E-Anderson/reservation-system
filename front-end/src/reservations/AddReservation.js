@@ -18,16 +18,13 @@ import ReservationForm from "./ReservationForm";
           });
         };
 
-        
-
         const handleSubmit = async (event) => {
           event.preventDefault();
           createReservation(formData).then(() => {
             history.push(`/reservations?date=${formData.reservation_date}`);
           }).catch(err => {
             setError(err.message)
-          });        
-          
+          });                  
         };
 
         return (
@@ -72,4 +69,4 @@ import ReservationForm from "./ReservationForm";
         );
       };
 
-export default AddReservation
+export default AddReservation;

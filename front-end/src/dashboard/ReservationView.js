@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 import { updateReservation, cancelReservation } from "../utils/api";
 
 function ReservationView({ reservation }) {
-    const abortController = new AbortController
+    const abortController = new AbortController();
 
     function handleUpdate() {
       updateReservation(reservation, abortController.signal)
-    }
+    };
 
     function handleCancel(event) {
       event.preventDefault()
@@ -18,9 +18,8 @@ function ReservationView({ reservation }) {
       ) {
         cancelReservation(reservation.reservation_id, abortController.signal)
           .then(window.location.reload())
-      }
-      
-    }
+      };  
+    };
 
     return (
       reservation.status !== "finished" && reservation.status !== "cancelled" && (
@@ -89,6 +88,6 @@ function ReservationView({ reservation }) {
         </>
       )
     );
-}
+};
 
-export default ReservationView
+export default ReservationView;

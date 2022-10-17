@@ -9,7 +9,7 @@ const controller = require("./reservations.controller");
 
 router.route("/").get(controller.list);
 
-router.route("/").post(controller.create)
+router.route("/").post(controller.create);
 
 router
   .route("/:reservation_id")

@@ -15,13 +15,13 @@ function TableView({ table }) {
       await updateReservation(reservation, abortController.signal)
         .then(await finishTable(table.table_id, table.reservation_id))
         .then(window.location.reload());
-    }
-  }
+    };
+  };
   
-
     function isOccupied(table) {
         return table.reservation_id
-    }
+    };
+
     return (
       <>
         <div className="border border-secondary mt-2">
@@ -52,6 +52,6 @@ function TableView({ table }) {
         </div>
       </>
     );
-}
+};
 
-export default TableView
+export default TableView;

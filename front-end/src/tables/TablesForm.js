@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router";
 
 function TablesForm({ handleChange, handleSubmit, tables }) {
-    const history = useHistory()
+    const history = useHistory();
 
     return (
       <>
@@ -51,6 +51,6 @@ function TablesForm({ handleChange, handleSubmit, tables }) {
         </form>
       </>
     );
-}
+};
 
-export default TablesForm
+export default TablesForm;

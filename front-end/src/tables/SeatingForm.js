@@ -6,22 +6,21 @@ import { listTables } from "../utils/api";
 import SeatingFormOptions from "./SeatingFormOptions";
 
 function SeatingForm() {
-    const [formData, setFormData] = useState([])
-    const [tables, setTables] = useState([])
-    const [error, setError] = useState("")
-    const history = useHistory()
-    const { reservation_id } = useParams()
+    const [formData, setFormData] = useState([]);
+    const [tables, setTables] = useState([]);
+    const [error, setError] = useState("");
+    const history = useHistory();
+    const { reservation_id } = useParams();
 
-    useEffect(loadTables, [])
+    useEffect(loadTables, []);
     
-
     function loadTables() {
-        const abortController = new AbortController()
+        const abortController = new AbortController();
         listTables(abortController.signal)
             .then(setTables)
 
         return () => abortController.abort()
-    }
+    };
 
 
     const changeHandler = ({ target }) => {
@@ -37,8 +36,7 @@ function SeatingForm() {
         history.push(`/dashboard`);
       }).catch(err => {
         setError(err.message)
-      })
-      
+      })   ;  
     };
 
     return (
@@ -80,6 +78,6 @@ function SeatingForm() {
         </div>
       </>
     );
-}
+};
 
-export default SeatingForm
+export default SeatingForm;

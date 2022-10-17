@@ -2,7 +2,7 @@ import React from "react";
 import { useHistory } from "react-router";
 
 function ReservationForm({ handleSubmit, handleChange, reservation }) {
-    const history = useHistory()
+    const history = useHistory();
 
 
     return (
@@ -97,6 +97,6 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
         </form>
       </>
     );
-}
+};
 
-export default ReservationForm
+export default ReservationForm;

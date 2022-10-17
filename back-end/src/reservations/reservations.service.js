@@ -1,10 +1,10 @@
-const knex = require("../db/connection")
+const knex = require("../db/connection");
 
 function list(date) {
     return knex("reservations")
       .select("*")
       .where({ reservation_date: date })
-}
+};
 
 function search(mobile_number) {
   return knex("reservations")
@@ -13,20 +13,20 @@ function search(mobile_number) {
       `%${mobile_number.replace(/\D/g, "")}%`
     )
     .orderBy("reservation_date");
-}
+};
 
 function listReservation(reservation_id) {
     return knex("reservations")
         .select("*")
         .where({ reservation_id: (reservation_id.reservation_id) ? reservation_id.reservation_id : reservation_id })
-}
+};
 
 function create(reservation) {
     return knex("reservations")
         .insert(reservation)
         .returning("*")
         .then((createReservation) => createReservation[0])
-}
+};
 
 function updateStatus(reservation_id, status) {
     return knex("reservations")
@@ -34,7 +34,7 @@ function updateStatus(reservation_id, status) {
         .where({ reservation_id: reservation_id })
         .update("status", status)
         .returning("*")
-}
+};
 
 function updateReservation(updatedReservation) {
     return knex("reservations")
@@ -42,7 +42,7 @@ function updateReservation(updatedReservation) {
       .where({ reservation_id: updatedReservation.reservation_id })
       .update(updatedReservation, "*")
       .returning("*");
-}
+};
     
 
 module.exports = {
@@ -52,4 +52,4 @@ module.exports = {
     updateStatus,
     search,
     updateReservation,
-}
+};

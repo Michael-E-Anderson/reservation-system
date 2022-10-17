@@ -77,6 +77,6 @@ function AddTable() {
         </div>
       </>
     );
-}
+};
 
-export default AddTable 
+export default AddTable;
