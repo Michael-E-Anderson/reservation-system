@@ -17,7 +17,7 @@ router
   .get(controller.listReservation)
   .put(controller.update);
 
-router.route("/:reservation_id/status").put(controller.update);
+router.route("/:reservation_id/status").put(controller.cancel);
 
 // router.route("/:reservation_Id")
 

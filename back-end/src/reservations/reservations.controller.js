@@ -156,22 +156,16 @@ async function create(req, res) {
 
 async function update(req, res) {
   const status = req.body.data.status
-  const reservation = await service.listReservation(req.params.reservation_id)
-
-  if (reservation[0].status === "booked") {
-    let newStatus = await service.update(reservation[0].reservation_id, status)
-    res.status(200).json({ data: { status: status } })
-  } else {
-    let newStatus = await service.update(
-      reservation[0].reservation_id,
-      "finished"
-    );
-    res.status(200).json({ data: { status: newStatus } })
-  }
+  
+  if (status === "booked") {
+    let updatedReservation = await service.updateReservation(req.body.data)
+    res.status(200).json({ data: updatedReservation[0] })
+  } 
 }
 
 async function reservationExists(req, res, next) {
   const reservation = await service.listReservation(req.params.reservation_id)
+  console.log(reservation, "mmmmmmmmm")
 
   if (reservation.length) {
     next()
@@ -189,7 +183,7 @@ function reservationHasStatus(req, res, next) {
   if (status === "unknown") {
     next({
       status: 400,
-      message: `Reservation ${req.params.reservation_id}'s status is unknown.`,
+      message: `Reservation ${req.body.data.reservation_id}'s status is unknown.`,
     });
   } else {
     return next()
@@ -197,16 +191,23 @@ function reservationHasStatus(req, res, next) {
 }
 
 async function statusIsFinished (req, res, next) {
-  const reservation = await service.listReservation(req.params.reservation_id)
+  const reservation = await service.listReservation(req.body.data.reservation_id)
 
   if (reservation[0].status === "finished") {
     next ({
       status: 400,
-      message: `Reservation ${req.params.reservation_id} is finished and cannot be changed.`
+      message: `Reservation ${req.body.data.reservation_id} is finished and cannot be changed.`
     })
   } else {
     next()
   }
+}
+
+async function cancelReservation (req, res) {
+  const reservation = await service.listReservation(req.params.reservation_id)
+  const cancelled = await service.updateStatus(reservation[0].reservation_id, "cancelled");
+
+  res.status(200).json({ data: cancelled[0] })
 }
 
 
@@ -231,10 +232,23 @@ module.exports = {
     asyncErrorBoundary(create),
   ],
   update: [
-    bodyHasData("status"),
+    bodyHasData("first_name"),
+    bodyHasData("last_name"),
+    bodyHasData("mobile_number"),
+    bodyHasData("reservation_date"),
+    bodyHasData("reservation_time"),
+    bodyHasData("people"),
+    // bodyHasData("status"),
+    peopleQuantity,
+    peopleIsANumber,
+    dateIsDate,
+    notATuesday,
+    inTheFuture,
+    openHours,
     asyncErrorBoundary(reservationExists),
     reservationHasStatus,
     asyncErrorBoundary(statusIsFinished),
     asyncErrorBoundary(update),
   ],
+  cancel: [asyncErrorBoundary(cancelReservation)]
 };

@@ -28,7 +28,7 @@ function create(reservation) {
         .then((createReservation) => createReservation[0])
 }
 
-function update(reservation_id, status) {
+function updateStatus(reservation_id, status) {
 
     return knex("reservations")
         .select("*")
@@ -37,10 +37,20 @@ function update(reservation_id, status) {
         .returning("*")
 }
 
+function updateReservation(updatedReservation) {
+    return knex("reservations")
+      .select("*")
+      .where({ reservation_id: updatedReservation.reservation_id })
+      .update(updatedReservation, "*")
+      .returning("*");
+}
+    
+
 module.exports = {
     create,
     list,
     listReservation,
-    update,
+    updateStatus,
     search,
+    updateReservation,
 }

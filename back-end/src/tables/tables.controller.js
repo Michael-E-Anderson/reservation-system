@@ -108,7 +108,7 @@ function capacityIsANumber(req, res, next) {
 
 async function update(req, res) {
   const table = await service.listTable(req.params.table_id)
-  await reservationsService.update(req.body.data.reservation_id, "seated")
+  await reservationsService.updateStatus(req.body.data.reservation_id, "seated")
   const updatedTable = await service.update(req.body.data, req.params.table_id)
   res.status(200).json({ data: updatedTable})
 }
@@ -152,7 +152,7 @@ async function reservationSeated(req, res, next) {
 
 async function destroy(req, res) {
   const table = await service.listTable(req.params.table_id)
-  await reservationsService.update(table[0].reservation_id, "finished")
+  await reservationsService.updateStatus(table[0].reservation_id, "finished")
   const finishedTable = await service.destroy(req.params.table_id)
   res.status(200).json({ data: finishedTable })
 }

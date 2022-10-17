@@ -16,7 +16,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 type="text"
                 name="first_name"
                 onChange={handleChange}
-                value={reservation.firstName}
+                value={reservation.first_name || ""}
                 placeholder="First Name"
                 required
               />
@@ -27,7 +27,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 type="text"
                 name="last_name"
                 onChange={handleChange}
-                value={reservation.lastName}
+                value={reservation.last_name || ""}
                 placeholder="Last Name"
                 required
               />
@@ -38,7 +38,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 type="text"
                 name="mobile_number"
                 onChange={handleChange}
-                value={reservation.mobileNumber}
+                value={reservation.mobile_number || ""}
                 placeholder="Mobile Number"
                 required
               />
@@ -49,7 +49,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 type="date"
                 name="reservation_date"
                 onChange={handleChange}
-                value={reservation.reservationDate}
+                value={reservation.reservation_date || ""}
                 placeholder="Date of Reservation"
                 required
               />
@@ -60,7 +60,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 type="time"
                 name="reservation_time"
                 onChange={handleChange}
-                value={reservation.reservationTime}
+                value={reservation.reservation_time || ""}
                 placeholder="Time of Reservation"
                 required
               />
@@ -72,7 +72,7 @@ function ReservationForm({ handleSubmit, handleChange, reservation }) {
                 min={1}
                 name="people"
                 onChange={handleChange}
-                defaultValue={reservation.people}
+                defaultValue={reservation.people || ""}
                 placeholder="Number of Guests"
                 required
               />
