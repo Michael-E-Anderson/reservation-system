@@ -14,4 +14,3 @@ function TableList({ tables }) {
 }
 
 export default TableList
-

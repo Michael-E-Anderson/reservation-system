@@ -1,5 +1,4 @@
 exports.up = function (knex) {
-  // throw new Error()
   return knex.schema.createTable("reservations", (table) => {
     table.increments("reservation_id").primary();
     table.string("first_name");

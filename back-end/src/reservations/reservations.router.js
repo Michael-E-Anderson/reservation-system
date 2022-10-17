@@ -5,7 +5,6 @@
  */
 
 const router = require("express").Router({ manageParams: true });
-const methodNotAllowed = require("../errors/methodNotAllowed");
 const controller = require("./reservations.controller");
 
 router.route("/").get(controller.list);
@@ -18,9 +17,6 @@ router
   .put(controller.update);
 
 router.route("/:reservation_id/status").put(controller.cancel);
-
-// router.route("/:reservation_Id")
-
 
 
 module.exports = router;

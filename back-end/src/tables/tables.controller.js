@@ -107,7 +107,6 @@ function capacityIsANumber(req, res, next) {
 }
 
 async function update(req, res) {
-  const table = await service.listTable(req.params.table_id)
   await reservationsService.updateStatus(req.body.data.reservation_id, "seated")
   const updatedTable = await service.update(req.body.data, req.params.table_id)
   res.status(200).json({ data: updatedTable})
@@ -136,10 +135,10 @@ async function tableExists(req, res, next) {
     return next();
   }
 }
+
 async function reservationSeated(req, res, next) {
-  // const table = await service.listTable(req.params.table_id)
   const reservation = await reservationsService.listReservation(req.body.data);
-  // console.log(table[0])
+
   if (reservation[0].status === "seated") {
     next({
       status: 400,

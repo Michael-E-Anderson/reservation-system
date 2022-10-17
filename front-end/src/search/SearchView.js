@@ -17,7 +17,6 @@ function SearchView() {
     const [number, setNumber] = useState([])
     const params = useQuery();
     const mobile_number = params.get("mobile_number");
-    // useEffect(loadResults, [mobileNumber]);
 
     function loadResults(){      
         const abortController = new AbortController()

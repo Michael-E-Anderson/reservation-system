@@ -23,8 +23,7 @@ function EditReservation() {
 
     useEffect(loadReservation, [reservation_id.reservation_id])
 
-    async function loadReservation() {
-        
+    async function loadReservation() { 
 
             await readReservation(
               reservation_id.reservation_id,
@@ -35,7 +34,6 @@ function EditReservation() {
               reservation_id.reservation_id,
               abortController.signal
             ).then(setEditReservation);
-
         
         return () => abortController.abort()
     }
@@ -53,7 +51,7 @@ function EditReservation() {
           history.push(`/dashboard?date=${editReservation.reservation_date}`);
         });
     }
-    console.log(editReservation)
+
     return (
       <>
         <div>

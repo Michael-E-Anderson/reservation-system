@@ -165,7 +165,6 @@ async function update(req, res) {
 
 async function reservationExists(req, res, next) {
   const reservation = await service.listReservation(req.params.reservation_id)
-  console.log(reservation, "mmmmmmmmm")
 
   if (reservation.length) {
     next()
@@ -178,7 +177,6 @@ async function reservationExists(req, res, next) {
 }
 
 function reservationHasStatus(req, res, next) {
-  // const reservation = service.listReservation(req.params.reservation_id)
   const status = req.body.data.status
   if (status === "unknown") {
     next({
@@ -191,7 +189,6 @@ function reservationHasStatus(req, res, next) {
 }
 
 async function statusIsFinished (req, res, next) {
-  console.log(req.body.data, "body")
   const reservation = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id)
 
   if (reservation[0].status === "finished") {
@@ -243,7 +240,6 @@ module.exports = {
     bodyHasData("reservation_date"),
     bodyHasData("reservation_time"),
     bodyHasData("people"),
-    // bodyHasData("status"),
     peopleQuantity,
     peopleIsANumber,
     dateIsDate,

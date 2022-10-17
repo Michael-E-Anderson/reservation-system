@@ -1,52 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { useHistory } from "react-router";
 import { createReservation } from "../utils/api";
 import ReservationForm from "./ReservationForm";
 
 
       function AddReservation() {
-        // const mountedRef = useRef(false);
-        const history = useHistory()
-        const [error, setError] = useState("")
-        // const { reservationId } = useParams();
-        // const [reservation, setReservation] = useState([]);
-
-        // useEffect(() => {
-        //   mountedRef.current = true;
-        //   return () => {
-        //     mountedRef.current = false;
-        //   };
-        // }, []);
-
-        // function readReservation(id, signal) {
-        //   const response = fetch(BASE_URL);
-        //   return response;
-        // }
-
-        // useEffect(() => {
-        //   const abortController = new AbortController();
-        //   async function loadReservation() {
-        //     try {
-        //       const response = await readReservation(
-        //         reservationId,
-        //         abortController.signal
-        //       );
-        //       if (mountedRef) {
-        //         setReservation(response);
-        //       }
-        //     } catch (error) {
-        //       throw error;
-        //     }
-        //   }
-        //   if (reservationId) {
-        //     loadReservation();
-        //   }
-        //   return () => abortController.abort();
-        // }, [reservationId]);
-
+        const history = useHistory();
+        const [error, setError] = useState("");
         const [formData, setFormData] = useState([]);
+
         const changeHandler = ({ target }) => {
           setFormData( {
             ...formData,
