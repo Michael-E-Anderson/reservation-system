@@ -157,7 +157,7 @@ async function create(req, res) {
 async function update(req, res) {
   const status = req.body.data.status
   
-  if (status === "booked") {
+  if (status) {
     let updatedReservation = await service.updateReservation(req.body.data)
     res.status(200).json({ data: updatedReservation[0] })
   } 
@@ -191,7 +191,8 @@ function reservationHasStatus(req, res, next) {
 }
 
 async function statusIsFinished (req, res, next) {
-  const reservation = await service.listReservation(req.body.data.reservation_id)
+  console.log(req.body.data, "body")
+  const reservation = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id)
 
   if (reservation[0].status === "finished") {
     next ({
@@ -204,17 +205,21 @@ async function statusIsFinished (req, res, next) {
 }
 
 async function cancelReservation (req, res) {
+  const status = req.body.data.status
   const reservation = await service.listReservation(req.params.reservation_id)
-  const cancelled = await service.updateStatus(reservation[0].reservation_id, "cancelled");
+  const updatedStatus = await service.updateStatus(reservation[0].reservation_id, status);
 
-  res.status(200).json({ data: cancelled[0] })
+  res.status(200).json({ data: updatedStatus[0] })
 }
 
 
 
 module.exports = {
   list: asyncErrorBoundary(list),
-  listReservation: asyncErrorBoundary(listReservation),
+  listReservation: [
+    asyncErrorBoundary(reservationExists),
+    asyncErrorBoundary(listReservation),
+  ],
   create: [
     bodyHasData("first_name"),
     bodyHasData("last_name"),
@@ -250,5 +255,10 @@ module.exports = {
     asyncErrorBoundary(statusIsFinished),
     asyncErrorBoundary(update),
   ],
-  cancel: [asyncErrorBoundary(cancelReservation)]
+  cancel: [
+    asyncErrorBoundary(reservationExists),
+    reservationHasStatus,
+    asyncErrorBoundary(statusIsFinished),
+    asyncErrorBoundary(cancelReservation),
+  ],
 };
