@@ -1,3 +1,6 @@
+// This component contains the code for the seating form and maps through all tables.
+// This component is used in ../layout/Routes.js.
+
 import React from "react";
 import { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router";
@@ -14,6 +17,7 @@ function SeatingForm() {
 
     useEffect(loadTables, []);
     
+    // Sets the state for tables.
     function loadTables() {
         const abortController = new AbortController();
         listTables(abortController.signal)
@@ -30,6 +34,8 @@ function SeatingForm() {
       });
     };
 
+    // Updates the status of a specific table and reservation and changes the page to the Dashboard.
+    // If an error occurs, it sets the state of the error.
     const handleSubmit = async (event) => {
       event.preventDefault();
       seatReservation(reservation_id, formData.table_id).then(() => {

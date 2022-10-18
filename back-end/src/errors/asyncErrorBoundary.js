@@ -1,3 +1,5 @@
+// This function helps to resolve asynchrounous functions and is used in the exports of the controller files for "reservations" and "tables"
+
 function asyncErrorBoundary(delegate, defaultStatus) {
   return (request, response, next) => {
     Promise.resolve()

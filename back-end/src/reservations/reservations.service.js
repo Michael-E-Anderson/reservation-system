@@ -1,3 +1,6 @@
+// This file provides all of the query functions to manipulate the "reservations" table of the database.
+// All functions are used in the corresponding controller file, and some are used in ../tables/tables.controller.js
+
 const knex = require("../db/connection");
 
 function list(date) {

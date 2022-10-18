@@ -1,3 +1,6 @@
+// This component contains the code that defines how the tables form will appear.
+// This component is used in ./AddTable.js.
+
 import React from "react";
 import { useHistory } from "react-router";
 

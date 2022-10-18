@@ -1,8 +1,12 @@
+// This component defines how a specific table will be appear.
+// This component is used in ./TableList.js
+
 import React from "react";
 import { finishTable, updateReservation, readReservation } from "../utils/api";
 
 function TableView({ table }) {
 
+  // After confirmation, this function updates a reservation's status to "finished" and updates a table's status to "Free".
   async function handleFinish(event) {
     event.preventDefault();
     if (
@@ -18,6 +22,7 @@ function TableView({ table }) {
     };
   };
   
+    // Checks if a table is occupied.
     function isOccupied(table) {
         return table.reservation_id
     };

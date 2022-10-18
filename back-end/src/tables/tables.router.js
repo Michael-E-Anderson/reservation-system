@@ -1,3 +1,5 @@
+// Contains all of the routes for "/tables".
+
 const router = require("express").Router({ manageParams: true });
 const controller = require("./tables.controller");
 

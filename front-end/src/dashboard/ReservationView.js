@@ -1,3 +1,6 @@
+// This component defines how a specific reservation will appear on the Dashboard.
+// This component is used in ./ReservationList.js
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { updateReservation, cancelReservation } from "../utils/api";
@@ -5,10 +8,12 @@ import { updateReservation, cancelReservation } from "../utils/api";
 function ReservationView({ reservation }) {
     const abortController = new AbortController();
 
+    // Changes a reservation's status to "seated".
     function handleUpdate() {
       updateReservation(reservation, abortController.signal)
     };
-
+    
+    // After confirmation, this function changes a reservation's status to "cancelled" and refreshes the page.
     function handleCancel(event) {
       event.preventDefault()
       if (

@@ -1,3 +1,6 @@
+// This is the controller file to handle manipulation of the "reservations" table and to send error messages to the front end.
+// All functions used here are exported and used in the corresponding router file.
+
 const service = require("./reservations.service")
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
 
@@ -5,6 +8,9 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
  * List handler for reservation resources
  */
 
+
+// Lists all reservations on a specific date sorting them by time and filtering out all reservations with a status of finished.
+// Also lists all reservations with a given mobile number and returns an error message if no reservations are found.
 async function list(req, res) {
 
   if(req.query.date) {
@@ -29,11 +35,13 @@ async function list(req, res) {
   };  
 };
 
+//Lists a specific reservation by the reservation _id
 async function listReservation(req, res) {
   const data = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id);
   res.status(200).json({ data: data[0] });
 };
 
+//Checks that forms have the appropriate fields filled out.
 function bodyHasData(propertyName) {
   return function(req, res, next) {
     const data = {...req.body.data, ...req.query};
@@ -47,6 +55,7 @@ function bodyHasData(propertyName) {
   };
 };
 
+//Checks that a reservation is not being made for a Tuesday
 function notATuesday(req, res, next) {
   const resDate = req.query.reservation_date || req.body.data?.reservation_date;
   const year = parseInt(resDate.substring(0, 4));
@@ -64,6 +73,7 @@ function notATuesday(req, res, next) {
     return next()
 };
 
+//Checks that the reservation is being made for a future date and time.
 function inTheFuture(req, res, next) {
   const resDate = req.query.reservation_date || req.body.data?.reservation_date;
   const resTime = req.query.reservation_time || req.body.data?.reservation_time;
@@ -88,6 +98,7 @@ function inTheFuture(req, res, next) {
   return next() 
 };
 
+//Checks that the reservation is being made for a time when the restaurant is open.
 function openHours(req, res, next) {
   const resTime = req.query.reservation_time || req.body.data?.reservation_time;
 
@@ -101,6 +112,7 @@ function openHours(req, res, next) {
     };
 } ;
 
+//Checks that the reservation is being made for at least 1 person.
 function peopleQuantity(req, res, next) {
   const people = req.query.people || req.body.data?.people;
   if (people > 0) {
@@ -111,6 +123,7 @@ function peopleQuantity(req, res, next) {
   });
 };
 
+//Checks that the "people" input of a form is a number.
 function peopleIsANumber(req, res, next){
   const people = req.query.people || req.body.data?.people;
   if(typeof people !== "number" && (req.body.data?.people)) {
@@ -123,6 +136,7 @@ function peopleIsANumber(req, res, next){
   };
 };
 
+//Checks that the date of a reservation is a legitamite date.
 function dateIsDate(req, res, next) {
   const date = req.query.reservation_date || req.body.data?.reservation_date;
   if(Date.parse(date) > 0) {
@@ -135,6 +149,7 @@ function dateIsDate(req, res, next) {
   };
 };
 
+//Checks that a new reservation's status is not "booked" or undefined
 function statusIsNotBooked(req, res, next) {
   const status = req.query.status || req.body.data?.status;
   if (status !== "booked" && status !== undefined) {
@@ -147,11 +162,13 @@ function statusIsNotBooked(req, res, next) {
   };
 };
 
+// Adds a reservation to the "reservations" table of the database.
 async function create(req, res) {
   const data = await service.create(req.query.people? req.query : req.body.data);
   res.status(201).json({ data });
 };
 
+// Updates a reservation in the "reservations" table of the database.
 async function update(req, res) {
   const status = req.body.data.status;
   
@@ -161,6 +178,7 @@ async function update(req, res) {
   };
 };
 
+// Checks that a reservation already exists.
 async function reservationExists(req, res, next) {
   const reservation = await service.listReservation(req.params.reservation_id);
 
@@ -174,6 +192,7 @@ async function reservationExists(req, res, next) {
   };
 };
 
+// Checks that a current reservation has a valid status.
 function reservationHasStatus(req, res, next) {
   const status = req.body.data.status;
   if (status === "unknown") {
@@ -185,7 +204,8 @@ function reservationHasStatus(req, res, next) {
     return next()
   };
 };
-
+ 
+// Prevents a reservation with a status of "finished" from being updated.
 async function statusIsFinished (req, res, next) {
   const reservation = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id);
 
@@ -199,7 +219,8 @@ async function statusIsFinished (req, res, next) {
   };
 };
 
-async function cancelReservation (req, res) {
+// Updates the status of an existing reservation.
+async function updateStatus (req, res) {
   const status = req.body.data.status;
   const reservation = await service.listReservation(req.params.reservation_id);
   const updatedStatus = await service.updateStatus(reservation[0].reservation_id, status);
@@ -249,10 +270,10 @@ module.exports = {
     asyncErrorBoundary(statusIsFinished),
     asyncErrorBoundary(update),
   ],
-  cancel: [
+  updateStatus: [
     asyncErrorBoundary(reservationExists),
     reservationHasStatus,
     asyncErrorBoundary(statusIsFinished),
-    asyncErrorBoundary(cancelReservation),
+    asyncErrorBoundary(updateStatus),
   ],
 };

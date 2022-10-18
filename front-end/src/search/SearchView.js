@@ -1,3 +1,6 @@
+// This component contains the code for the search page.
+// This component is used in ../layouts/Routes.js.
+
 import React from "react";
 import { useState } from "react";
 import { listReservations } from "../utils/api";
@@ -10,6 +13,7 @@ function SearchView() {
     const [formData, setFormData] = useState([]);
     const [number, setNumber] = useState([]);
 
+    // Sets the state for reservations and if an error occurs, sets the state for error.
     function loadResults(){      
         const abortController = new AbortController();
         listReservations(

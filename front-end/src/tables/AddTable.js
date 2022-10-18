@@ -1,3 +1,6 @@
+// This component holds the code to create a new table.
+// This componenet is used in ../layout/Routes.js.
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -22,6 +25,8 @@ function AddTable() {
     };
 
     const [formData, setFormData] = useState([]);
+    
+    // Allows information to be input into the tables form and changes the "capacity" input's value to a number.
     const changeHandler = ({ target }) => {
       setFormData({
         ...formData,
@@ -29,7 +34,7 @@ function AddTable() {
       });
     };
 
-
+    // Creates the table and changes the page to the Dashboard.
     const handleSubmit = async (event) => {
       event.preventDefault();
       const response = await createTable(formData);

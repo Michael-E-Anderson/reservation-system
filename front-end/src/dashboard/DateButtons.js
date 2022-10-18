@@ -1,3 +1,6 @@
+// This component contains the code for the buttons at the top of the Dashboard.
+// The buttons update the date to show reservations on a given date.
+
 import React from "react";
 import { Link } from "react-router-dom";
 

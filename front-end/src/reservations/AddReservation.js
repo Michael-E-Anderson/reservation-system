@@ -1,3 +1,6 @@
+// This component is the parent component of and contains functions for ./ReservationForm.js, and allows the creation of a new reservation.
+// This component is used in ../layout/Routes.js
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -10,14 +13,17 @@ import ReservationForm from "./ReservationForm";
         const history = useHistory();
         const [error, setError] = useState("");
         const [formData, setFormData] = useState([]);
-
+        
+        // Allows the form to have information input into the fields and changes the "people" input to be a number.
         const changeHandler = ({ target }) => {
           setFormData( {
             ...formData,
             [target.name]: target.name === "people" ? parseInt(target.value) : target.value,
           });
         };
-
+        
+        // Creates a new reservation and changes the page to display the Dashboard with reservations for the date of the new reservation.\
+        // If the reservation cannot be created, the error message is displayed.
         const handleSubmit = async (event) => {
           event.preventDefault();
           createReservation(formData).then(() => {

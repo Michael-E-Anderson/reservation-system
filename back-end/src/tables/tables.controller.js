@@ -1,7 +1,11 @@
+// This file contains all of the middleware functions to manipulate the "tables" table of the database.
+// All functions written here are used in the corresponding router file.
+
 const service = require("./tables.service");
 const reservationsService = require("../reservations/reservations.service");
 const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
 
+// Lists all tables in the "tables" table, and sorts them by name
 async function list(req, res) {
   const data = await service.list();
   const sortedTables = [...data].sort((a, b) =>
@@ -10,6 +14,7 @@ async function list(req, res) {
   res.json({ data: sortedTables });
 };
 
+// Checks that a form has all of the proper fields filled.
 function bodyHasData(propertyName) {
   return function (req, res, next) {
     const data = { ...req.body.data, ...req.query };
@@ -24,6 +29,7 @@ function bodyHasData(propertyName) {
   };
 };
 
+// Checks that the table_name is at least 2 characters long.
 function nameLength(req, res, next) {
     const name = req.query.table_name || req.body.data?.table_name;
     if(name.length < 2) {
@@ -34,6 +40,7 @@ function nameLength(req, res, next) {
     } next()
 };
 
+// Checks that a table can seat at least 1 person.
 function hasCapacity(req, res, next) {
     const capacity = req.query.capacity || req.body.data?.capacity;
 
@@ -47,6 +54,7 @@ function hasCapacity(req, res, next) {
     };
 };
 
+// Adds a new table to the "tables" table of the database.
 async function create(req, res) {
   const data = await service.create(
     req.query.capacity ? req.query : req.body.data
@@ -54,6 +62,7 @@ async function create(req, res) {
   res.status(201).json({ data });
 };
 
+// Checks that a specific table has the capacity to fit a specific reservation.
 async function tableCanFitReservation(req, res, next) {
   const reservation = await reservationsService.listReservation(req.body.data);
   const table = await service.listTable(req.params.table_id);
@@ -68,6 +77,7 @@ async function tableCanFitReservation(req, res, next) {
     };
 };
 
+// Checks that a table is not occupied.
 async function tableIsFree(req, res, next) {
   const table = await service.listTable(req.params.table_id);
 
@@ -81,6 +91,7 @@ async function tableIsFree(req, res, next) {
   };
 };
 
+// Checks that a given reservation exists in the database.
 async function reservationExists(req, res, next) {
   const reservation = await reservationsService.listReservation(req.body.data);
   if(!reservation.length) {
@@ -93,6 +104,7 @@ async function reservationExists(req, res, next) {
   };
 };
 
+// Checks that the capicity input of the form is a number.
 function capacityIsANumber(req, res, next) {
   const capacity = req.body.data.capacity;
 
@@ -106,12 +118,14 @@ function capacityIsANumber(req, res, next) {
   };
 };
 
+// Updates an existing table.
 async function update(req, res) {
   await reservationsService.updateStatus(req.body.data.reservation_id, "seated")
   const updatedTable = await service.update(req.body.data, req.params.table_id);
   res.status(200).json({ data: updatedTable});
 };
 
+// Checks that a table is occupied.
 async function tableIsOccupied(req, res, next) {
   const table = await service.listTable(req.params.table_id);
   
@@ -123,6 +137,7 @@ async function tableIsOccupied(req, res, next) {
   } return next()
 };
 
+// Checks that a specific table exists.
 async function tableExists(req, res, next) {
   const table = await service.listTable(req.params.table_id);
 
@@ -136,6 +151,7 @@ async function tableExists(req, res, next) {
   };
 };
 
+// Checks that a specific reservation has already been seated.
 async function reservationSeated(req, res, next) {
   const reservation = await reservationsService.listReservation(req.body.data);
 
@@ -149,6 +165,7 @@ async function reservationSeated(req, res, next) {
   };
 };
 
+// Changes the given table's status to "Free" and updates the given reservation's status to "finished".
 async function destroy(req, res) {
   const table = await service.listTable(req.params.table_id);
   await reservationsService.updateStatus(table[0].reservation_id, "finished")

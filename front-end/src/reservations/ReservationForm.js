@@ -1,3 +1,6 @@
+// This component contains the code for the form to create and update a reservation.
+// This componenet is used in ./AddReservation.js and ./EditReservation.js.
+
 import React from "react";
 import { useHistory } from "react-router";
 

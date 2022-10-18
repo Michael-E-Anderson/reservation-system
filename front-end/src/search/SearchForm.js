@@ -1,3 +1,6 @@
+// This component contains the code for the form that searches for reservations.
+// This component is used in ./SearchView.js.
+
 import React from "react";
 
 function SearchForm({ handleChange, handleSearch, mobile_number }) {
