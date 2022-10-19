@@ -14,7 +14,7 @@ function TableView({ table }) {
         "Is this table ready to seat new guests? This cannot be undone."
       )
     ) {
-      const abortController = new AbortController
+      const abortController = new AbortController()
       const reservation = await readReservation(table.reservation_id, abortController.signal)
       await updateReservation(reservation, abortController.signal)
         .then(await finishTable(table.table_id, table.reservation_id))

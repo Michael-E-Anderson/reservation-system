@@ -16,7 +16,7 @@ async function list(req, res) {
   if(req.query.date) {
     const data = await service.list(req.query.date);
     const sortedReservations = [...data].sort((a, b) =>
-      a.reservation_time.localeCompare(b.reservation_time)
+    a.reservation_time.localeCompare(b.reservation_time)
     );
     res.json({
       data: sortedReservations.filter(
@@ -24,13 +24,16 @@ async function list(req, res) {
       ),
     });
   };
-
+  
   if (req.query.mobile_number) {
     const data = await service.search(req.query.mobile_number)
-    if(data){
+    if(data.length){
       res.json({ data: data });
     } else {
-      res.status(404).message("Reservation not found.")
+      res.send({
+        status: 404,
+        message: "No reservation found"
+      })
     }; 
   };  
 };
@@ -38,6 +41,7 @@ async function list(req, res) {
 //Lists a specific reservation by the reservation _id
 async function listReservation(req, res) {
   const data = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id);
+  console.log(123)
   res.status(200).json({ data: data[0] });
 };
 
@@ -181,8 +185,8 @@ async function update(req, res) {
 // Checks that a reservation already exists.
 async function reservationExists(req, res, next) {
   const reservation = await service.listReservation(req.params.reservation_id);
-
-  if (reservation.length) {
+  
+  if (reservation) {
     next()
   } else {
     next({

@@ -9,12 +9,14 @@ import SearchForm from "./SearchForm";
 
 function SearchView() {
     const [reservations, setReservations] = useState([]);
-    const [error, setError] = useState([]);
+    const [error, setError] = useState("");
     const [formData, setFormData] = useState([]);
     const [number, setNumber] = useState([]);
 
     // Sets the state for reservations and if an error occurs, sets the state for error.
-    function loadResults(){      
+    function loadResults(){
+        setError("")
+        setReservations([])   
         const abortController = new AbortController();
         listReservations(
           { mobile_number: formData.mobile_number },

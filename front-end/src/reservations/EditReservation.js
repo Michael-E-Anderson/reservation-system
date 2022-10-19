@@ -13,7 +13,7 @@ function EditReservation() {
   const history = useHistory();
   const [reservation, setReservation] = useState([]);
   const [editReservation, setEditReservation] = useState([]);
-  const abortController = new AbortController();
+  
 
   useEffect(() => {
     mountedRef.current = true;
@@ -22,21 +22,26 @@ function EditReservation() {
     };
   }, []);
 
-  useEffect(loadReservation, [reservation_id.reservation_id]);
+  useEffect(() => {
+      const abortController = new AbortController();
+      async function loadReservation() {
+        await readReservation(
+          reservation_id.reservation_id,
+          abortController.signal
+        ).then(setReservation);
+        await readReservation(
+          reservation_id.reservation_id,
+          abortController.signal
+        ).then(setEditReservation);
+      }
+
+      loadReservation()
+      return () => abortController.abort();
+
+  }, [reservation_id.reservation_id]);
 
   // Sets the states for reservation and editReservation.
-  async function loadReservation() {
-    await readReservation(
-      reservation_id.reservation_id,
-      abortController.signal
-    ).then(setReservation);
-    await readReservation(
-      reservation_id.reservation_id,
-      abortController.signal
-    ).then(setEditReservation);
-
-    return () => abortController.abort();
-  }
+  
 
   // Allows the form to be changed and changes anything in the "people" input to a number.
   const handleChange = ({ target }) => {
@@ -50,6 +55,7 @@ function EditReservation() {
   // Updates a reservation and changes the page to display reservations of the updated reservation's date on the Dashboard.
   const handleSubmit = (event) => {
     event.preventDefault();
+    const abortController = new AbortController()
     updateReservation(editReservation, abortController.signal).then(() => {
       history.push(`/dashboard?date=${editReservation.reservation_date}`);
     });

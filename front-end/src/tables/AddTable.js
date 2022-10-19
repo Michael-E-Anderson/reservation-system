@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useHistory } from "react-router";
 import { createTable } from "../utils/api";
+import ErrorAlert from "../layout/ErrorAlert"
 import TablesForm from "./TablesForm";
 
 function AddTable() {
@@ -25,6 +26,7 @@ function AddTable() {
     };
 
     const [formData, setFormData] = useState([]);
+    const [error, setError] = useState("")
     
     // Allows information to be input into the tables form and changes the "capacity" input's value to a number.
     const changeHandler = ({ target }) => {
@@ -37,11 +39,16 @@ function AddTable() {
     // Creates the table and changes the page to the Dashboard.
     const handleSubmit = async (event) => {
       event.preventDefault();
-      const response = await createTable(formData);
-      history.push(`/dashboard`);
-      setFormData(initialFormState);
+      await createTable(formData).then(() => {
+        history.push(`/dashboard`)
+        setFormData(initialFormState)
+      })    
+      .catch((err) => {
+        setError(err)
+      })
+      
 
-      return response
+      
     };
 
 
@@ -79,6 +86,7 @@ function AddTable() {
             handleSubmit={handleSubmit}
             tables={formData}
           />
+          <ErrorAlert error={error} />
         </div>
       </>
     );
