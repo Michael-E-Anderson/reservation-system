@@ -33,23 +33,27 @@ function TableView({ table }) {
           <div>
             <div>
               <div className="d-flex">
-                <div className="mr-auto p-2">
-                  <div className="pl-2">
-                    <h4 className="ml-3">{table.table_name}</h4>
-                    <p className="ml-4" data-table-id-status={table.table_id}>
-                      Status: {isOccupied(table) ? "Occupied" : "Free"}
-                    </p>
+                <div className="col">
+                  <div className="mr-auto p-2">
+                    <div className="pl-2">
+                      <h4 className="ml-3">{table.table_name}</h4>
+                      <p className="ml-4" data-table-id-status={table.table_id}>
+                        Status: {isOccupied(table) ? "Occupied" : "Free"}
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <div className="p-2 pt-4">
-                  <button
-                    type="button"
-                    className="btn btn-danger pl-4 pr-4"
-                    onClick={handleFinish}
-                    data-table-id-finish={table.table_id}
-                  >
-                    Finish
-                  </button>
+                <div className="col">
+                  <div className="p-2 pt-4">
+                    <button
+                      type="button"
+                      className="btn btn-danger pl-4 pr-4"
+                      onClick={handleFinish}
+                      data-table-id-finish={table.table_id}
+                    >
+                      Finish
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
