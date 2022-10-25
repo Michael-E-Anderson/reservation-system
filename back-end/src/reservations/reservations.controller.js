@@ -11,8 +11,7 @@ const asyncErrorBoundary = require("../errors/asyncErrorBoundary")
 
 // Lists all reservations on a specific date sorting them by time and filtering out all reservations with a status of finished.
 // Also lists all reservations with a given mobile number and returns an error message if no reservations are found.
-async function list(req, res) {
-
+async function list(req, res, next) {
   if(req.query.date) {
     const data = await service.list(req.query.date);
     const sortedReservations = [...data].sort((a, b) =>
@@ -24,16 +23,13 @@ async function list(req, res) {
       ),
     });
   };
-  
+
   if (req.query.mobile_number) {
     const data = await service.search(req.query.mobile_number)
     if(data.length){
-      res.json({ data: data });
+      res.json({ data });
     } else {
-      res.send({
-        status: 404,
-        message: "No reservation found"
-      })
+      res.status(404).json({ data: [] });
     }; 
   };  
 };
@@ -41,7 +37,6 @@ async function list(req, res) {
 //Lists a specific reservation by the reservation _id
 async function listReservation(req, res) {
   const data = await service.listReservation(req.params.reservation_id || req.body.data?.reservation_id);
-  console.log(123)
   res.status(200).json({ data: data[0] });
 };
 
@@ -186,7 +181,7 @@ async function update(req, res) {
 async function reservationExists(req, res, next) {
   const reservation = await service.listReservation(req.params.reservation_id);
   
-  if (reservation) {
+  if (reservation.length) {
     next()
   } else {
     next({

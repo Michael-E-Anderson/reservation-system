@@ -8,14 +8,12 @@ import ReservationList from "../dashboard/ReservationList";
 import SearchForm from "./SearchForm";
 
 function SearchView() {
-    const [reservations, setReservations] = useState([]);
-    const [error, setError] = useState("");
+    const [reservations, setReservations] = useState([[]]);
     const [formData, setFormData] = useState([]);
     const [number, setNumber] = useState([]);
 
     // Sets the state for reservations and if an error occurs, sets the state for error.
     function loadResults(){
-        setError("")
         setReservations([])   
         const abortController = new AbortController();
         listReservations(
@@ -24,16 +22,13 @@ function SearchView() {
         )
           .then(setReservations)
           .then(setNumber(formData.mobile_number))
-          .catch((err) => {
-            setError(err.message);
-          });
-
+          
         return () => abortController.abort()
     };
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        loadResults()
+        loadResults()               
     };
   
     const handleChange = ({ target }) => {
@@ -50,7 +45,7 @@ function SearchView() {
           handleChange={handleChange}
           mobile_number={formData}
         />
-        {reservations.length ? (
+        {reservations.length && reservations[0].reservation_id ? (
           <>
             <h3>Reservations for {number}</h3>
             <div>
@@ -60,7 +55,7 @@ function SearchView() {
         ) : (
           <div></div>
         )}
-        {error && (
+        {!reservations.length && (
           <div className="alert p-2">
             <p className="alert-danger">No reservations found.</p>
           </div>
