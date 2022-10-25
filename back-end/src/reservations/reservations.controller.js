@@ -62,6 +62,7 @@ function notATuesday(req, res, next) {
   const day = parseInt(resDate.substring(8, 10)) + 1;
   const date = new Date(Date.UTC(year, month, day)).toString();
   const resDay = date.substring(0, 3);
+  console.log(resDay)
 
   if (resDay === "Tue") {
     next({
