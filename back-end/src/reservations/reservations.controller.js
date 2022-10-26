@@ -80,7 +80,7 @@ function inTheFuture(req, res, next) {
   const resMinutes = parseInt(resTime.substring(3, 6));
   const year = parseInt(resDate.substring(0, 4));
   const month = parseInt(resDate.substring(5, 7));
-  const day = parseInt(resDate.substring(8, 10)) + 1;
+  const day = parseInt(resDate.substring(8, 10)) -1 1;
   const now = new Date();
   const nowHour = now.getHours();
   const nowMinutes = now.getMinutes();
