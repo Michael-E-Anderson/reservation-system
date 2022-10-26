@@ -43,7 +43,7 @@ function TableView({ table }) {
                     </div>
                   </div>
                 </div>
-                <div className="p-2 pt-4">
+                {isOccupied(table) && <div className="p-2 pt-4">
                   <div className="col">
                     <div>
                       <button
@@ -56,7 +56,7 @@ function TableView({ table }) {
                       </button>
                     </div>
                   </div>
-                </div>
+                </div>}
               </div>
             </div>
           </div>

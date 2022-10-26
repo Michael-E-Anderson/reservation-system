@@ -30,7 +30,9 @@ import ReservationForm from "./ReservationForm";
             history.push(`/reservations?date=${formData.reservation_date}`);
           }).catch(err => {
             setError(err.message)
-          });                  
+          });   
+          const now = new Date()
+          console.log(formData.reservation_date, formData.reservation_time, now.getDate(), now.getMonth() + 1, now.getHours(), now.getMinutes())               
         };
 
         return (
