@@ -56,7 +56,11 @@ function bodyHasData(propertyName) {
 
 //Checks that a reservation is not being made for a Tuesday
 function notATuesday(req, res, next) {
-  const resDate = req.query.reservation_date || req.body.data?.reservation_date;
+  let resDate = req.query.reservation_date || req.body.data?.reservation_date;
+  console.log(resDate, new Date(resDate).setHours(new Date(resDate).getHours() - 6));
+  const parseDate = new Date(resDate)
+  parseDate.setHours(parseDate.getHours() - 6)
+  resDate= parseDate.toString()
   const year = parseInt(resDate.substring(0, 4));
   const month = parseInt(resDate.substring(5, 7)) - 1;
   const day = parseInt(resDate.substring(8, 10)) + 1;
