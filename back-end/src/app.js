@@ -27,5 +27,5 @@ app.use("/tables", tablesRouter);
 
 app.use(notFound);
 app.use(errorHandler);
-console.log(Date.now().toString(), "kkkkkkkkkkkk")
+console.log((new Date()).toString(), "kkkkkkkkkkkk")
 module.exports = app;
