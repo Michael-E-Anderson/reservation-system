@@ -80,14 +80,14 @@ function inTheFuture(req, res, next) {
   const resMinutes = parseInt(resTime.substring(3, 6));
   const year = parseInt(resDate.substring(0, 4));
   const month = parseInt(resDate.substring(5, 7));
-  const day = parseInt(resDate.substring(8, 10)) + 1;
+  const day = parseInt(resDate.substring(8, 10));
   const now = new Date();
   const nowHour = now.getHours();
   const nowMinutes = now.getMinutes();
   const nowDay = now.getDate();
   const nowMonth = now.getMonth() + 1;
   const nowYear = now.getFullYear();
-  
+  console.log(year, month, day, nowYear, nowMonth, nowDay)
   if (year < nowYear || year === nowYear && month < nowMonth || year === nowYear && month === nowMonth && day < nowDay || nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
     next({
       status: 400,
