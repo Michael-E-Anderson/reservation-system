@@ -57,17 +57,21 @@ function bodyHasData(propertyName) {
 //Checks that a reservation is not being made for a Tuesday
 function notATuesday(req, res, next) {
   let resDate = req.query.reservation_date || req.body.data?.reservation_date;
-  console.log(resDate, new Date(resDate).setHours(new Date(resDate).getHours() - 6));
-  const parseDate = new Date(resDate)
-  parseDate.setHours(parseDate.getHours() - 6)
-  resDate= parseDate.toString()
-  const year = parseInt(resDate.substring(0, 4));
-  const month = parseInt(resDate.substring(5, 7)) - 1;
-  const day = parseInt(resDate.substring(8, 10)) + 1;
-  const date = new Date(Date.UTC(year, month, day)).toString();
-  const resDay = date.substring(0, 3);
+  const [year, month, day] = resDate.split("-")
+  // console.log(resDate, new Date(resDate).setHours(new Date(resDate).getHours() - 6));
+  // const parseDate = new Date(resDate)
+  // console.log(resDate, parseDate.getDay(), "mmmmmmmmm")
+  // //parseDate.setHours(parseDate.getHours() - 6)
+  // resDate = parseDate.toString()
+  // const year = parseInt(resDate.substring(0, 4));
+  // const month = parseInt(resDate.substring(5, 7)) - 1;
+  // const day = parseInt(resDate.substring(8, 10)) + 1;
+  const date = (new Date(`${month}/${day}/${year}`)).getDay();
+  // console.log(month, day, year, date, "DATE")
+  //const resDay = date.substring(0, 3);
   
-  if (resDay === "Tue") {
+  
+  if (date === 2) {
     next({
       status: 400,
       message: "The restaurant is closed on Tuesdays."
