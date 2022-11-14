@@ -58,18 +58,7 @@ function bodyHasData(propertyName) {
 function notATuesday(req, res, next) {
   let resDate = req.query.reservation_date || req.body.data?.reservation_date;
   const [year, month, day] = resDate.split("-")
-  // console.log(resDate, new Date(resDate).setHours(new Date(resDate).getHours() - 6));
-  // const parseDate = new Date(resDate)
-  // console.log(resDate, parseDate.getDay(), "mmmmmmmmm")
-  // //parseDate.setHours(parseDate.getHours() - 6)
-  // resDate = parseDate.toString()
-  // const year = parseInt(resDate.substring(0, 4));
-  // const month = parseInt(resDate.substring(5, 7)) - 1;
-  // const day = parseInt(resDate.substring(8, 10)) + 1;
   const date = (new Date(`${month}/${day}/${year}`)).getDay();
-  // console.log(month, day, year, date, "DATE")
-  //const resDay = date.substring(0, 3);
-  
   
   if (date === 2) {
     next({
@@ -95,7 +84,7 @@ function inTheFuture(req, res, next) {
   const nowDay = now.getDate();
   const nowMonth = now.getMonth() + 1;
   const nowYear = now.getFullYear();
-  console.log(year, month, day, nowYear, nowMonth, nowDay)
+
   if (year < nowYear || year === nowYear && month < nowMonth || year === nowYear && month === nowMonth && day < nowDay || nowDay === day && nowMonth === month && nowHour >= resHour && nowMinutes >= resMinutes) {
     next({
       status: 400,
